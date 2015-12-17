@@ -9,8 +9,10 @@
 
 #include <time.h>
 
+#ifdef WIN32
 #include <windows.h>
 #include <mmsystem.h>
+#endif
 
 CTimeMonitor::CTimeMonitor()
 {
