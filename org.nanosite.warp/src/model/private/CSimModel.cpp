@@ -1,7 +1,7 @@
 /*
  * CSimModel.cpp
  *
- *  Created on: 04.08.2009
+ *  Created on: 2009-08-04
  *      Author: kbirken
  */
 
@@ -34,9 +34,6 @@ CSimModel::CSimModel()
 CSimModel::~CSimModel()
 {
 	// clean-up
-	for (Resource::Vector::iterator it1 = _resources.begin(); it1!=_resources.end(); it1++) {
-		delete(*it1);
-	}
 	for (CStep::Vector::iterator it2 = _steps.begin(); it2!=_steps.end(); it2++) {
 		delete(*it2);
 	}
@@ -77,7 +74,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 	// add artificial resource for "wait time"
 	// (this resource can be used unlimited)
-	Resource* res = new Resource("wait", false);
+	shared_ptr<Resource> res(new Resource("wait", false));
 	_resources.push_back(res);
 	_slots.push_back(res);
 
@@ -90,7 +87,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		}
 
 		// NB: cpu id as given for each FunctionBlock later in file must be identical to index in _resources vector
-		Resource* res = new Resource(in);
+		shared_ptr<Resource> res(new Resource(in));
 		_resources.push_back(res);
 
 		// add slot(s) for this resource
@@ -230,18 +227,18 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		vector<int> values;
 		vector<int> averageCSTs;
 		for(int r=0; r<getNResources(); r++) {
-			const Resource* res = _resources[r];
+			const Resource& res = *(_resources[r]);
 
 			int rv=0, cst=0;
-			int n = res->getNSlots();
-			int nRIs = res->getNInterfaces();
+			int n = res.getNSlots();
+			int nRIs = res.getNInterfaces();
 			for(int ri=0; ri<n; ri++) {
 				int v;
 				in >> v;
 
 				rv += v;
 				if (nRIs>0) {
-					int cstRI = v * res->getCST(ri);
+					int cstRI = v * res.getCST(ri);
 					cst += cstRI;
 					/*
 					if (cst>0) {

@@ -21,7 +21,7 @@ namespace model {
 class CAPSScheduler
 {
 public:
-	CAPSScheduler(const model::Resource* res);
+	CAPSScheduler(const model::Resource& res);
 	virtual ~CAPSScheduler();
 
 	void clear();
@@ -34,7 +34,7 @@ public:
 	int getNReqPerPartition(int i)  const  { return _nReqPerPartition[i]; }
 
 private:
-	const model::Resource* _resource;
+	const model::Resource& _resource;
 
 	// data changed during each iteration
 	int _nUsedPartitions;

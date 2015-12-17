@@ -10,13 +10,13 @@
 
 namespace warp {
 
-CAPSScheduler::CAPSScheduler(const warp::model::Resource* res) :
+CAPSScheduler::CAPSScheduler(const warp::model::Resource& res) :
 	_resource(res),
 	_nUsedPartitions(0),
 	_usedPartitionsSize(0),
 	_nRequests(0)
 {
-	_nReqPerPartition.resize(res->getNPartitions());
+	_nReqPerPartition.resize(res.getNPartitions());
 }
 
 
@@ -41,7 +41,7 @@ void CAPSScheduler::addRequest (int i)
 {
 	if (_nReqPerPartition[i]==0) {
 		// first request for this partition, add up partitionSizes
-		_usedPartitionsSize += _resource->getPartitionSize(i);
+		_usedPartitionsSize += _resource.getPartitionSize(i);
 		_nUsedPartitions++;
 	}
 	_nRequests++;
@@ -51,7 +51,7 @@ void CAPSScheduler::addRequest (int i)
 
 int CAPSScheduler::getPartitionSize(int i) const
 {
-	return _resource->getPartitionSize(i);
+	return _resource.getPartitionSize(i);
 }
 
 } /* namespace warp */

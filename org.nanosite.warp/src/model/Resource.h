@@ -18,7 +18,7 @@ namespace model {
 
 	class Resource {
 	public:
-		typedef vector<Resource*> Vector;
+		typedef vector<shared_ptr<Resource> > Vector;
 
 		typedef enum {
 			SCHED_PLAIN = 0,

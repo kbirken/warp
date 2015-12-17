@@ -245,7 +245,7 @@ void CSimulatorCore::run (
 	Schedulers scheds;
 	for(unsigned int r=0; r<resources.size(); r++) {
 		if (resources[r]->isSchedulerAPS()) {
-			CAPSScheduler* sched = new CAPSScheduler(resources[r]);
+			CAPSScheduler* sched = new CAPSScheduler(*resources[r]);
 			scheds[r] = sched;
 		}
 	}
@@ -374,17 +374,17 @@ bool CSimulatorCore::iteration (
 		for(Schedulers::iterator si=scheds.begin(); si!=scheds.end(); ++si) {
 			int r = si->first;
 			CAPSScheduler* aps = si->second;
-			model::Resource* res = resources[r];
+			const model::Resource& res = *(resources[r]);
 			bool logstart = false;
-			for(unsigned int p=0; p<res->getNPartitions(); p++) {
+			for(unsigned int p=0; p<res.getNPartitions(); p++) {
 				if (aps->getNReqPerPartition(p)>0) {
 					if (!logstart) {
 						logstart = true;
-						log("SCHED", "%s=APS: ", res->getName());
+						log("SCHED", "%s=APS: ", res.getName());
 					}
 					printf(" %s/%i/%d/%d",
-							res->getPartitionName(p).c_str(), p,
-							(res->getPartitionSize(p)*1000) / aps->getUsedPartitionsSize(),
+							res.getPartitionName(p).c_str(), p,
+							(res.getPartitionSize(p)*1000) / aps->getUsedPartitionsSize(),
 							aps->getNReqPerPartition(p)
 					);
 				}
