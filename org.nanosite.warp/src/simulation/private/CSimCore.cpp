@@ -10,6 +10,7 @@
 #include "simulation/CIntAccuracy.h"
 #include "model/CBehaviour.h"
 
+namespace warp {
 
 // integration window for load diagrams
 int CSimulatorCore::_timeWindowDiscrete = 10000;  // [microsec]
@@ -21,6 +22,7 @@ int CSimulatorCore::_timeWindowDiscrete = 10000;  // [microsec]
 
 CSimulatorCore::CSimulatorCore (int verbose) :
 	_verbose(verbose),
+	_healthy(true),
 	_time(0),
 	_timeDiscrete(0),
 	_timeslotDiscrete(0),
@@ -201,8 +203,8 @@ void CSimulatorCore::stepDone (CStep* step) {
 
 
 void CSimulatorCore::run (
-		const CResource::Vector& resources,
-		const CResource::Vector& resourceInterfaces,
+		const model::Resource::Vector& resources,
+		const model::Resource::Vector& resourceInterfaces,
 		CPoolVector& pools,
 		bool withLoadfile,
 		string dotFileName)
@@ -302,7 +304,7 @@ void CSimulatorCore::run (
 
 
 bool CSimulatorCore::iteration (
-	const CResource::Vector& resources,
+	const model::Resource::Vector& resources,
 	CPoolVector& pools,
 	Schedulers& scheds,
 	vector<bool> isLimited,
@@ -372,7 +374,7 @@ bool CSimulatorCore::iteration (
 		for(Schedulers::iterator si=scheds.begin(); si!=scheds.end(); ++si) {
 			int r = si->first;
 			CAPSScheduler* aps = si->second;
-			CResource* res = resources[r];
+			model::Resource* res = resources[r];
 			bool logstart = false;
 			for(unsigned int p=0; p<res->getNPartitions(); p++) {
 				if (aps->getNReqPerPartition(p)>0) {
@@ -527,5 +529,7 @@ bool CSimulatorCore::iteration (
 
 	return true;
 }
+
+} /* namespace warp */
 
 

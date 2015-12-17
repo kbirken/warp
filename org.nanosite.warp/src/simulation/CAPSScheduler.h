@@ -11,14 +11,17 @@
 #include <vector>
 using namespace std;
 
-// forward declarations
-class CResource;
+namespace warp {
 
+// forward declarations
+namespace model {
+	class Resource;
+}
 
 class CAPSScheduler
 {
 public:
-	CAPSScheduler(const CResource* res);
+	CAPSScheduler(const model::Resource* res);
 	virtual ~CAPSScheduler();
 
 	void clear();
@@ -31,7 +34,7 @@ public:
 	int getNReqPerPartition(int i)  const  { return _nReqPerPartition[i]; }
 
 private:
-	const CResource* _resource;
+	const model::Resource* _resource;
 
 	// data changed during each iteration
 	int _nUsedPartitions;
@@ -40,5 +43,7 @@ private:
 	vector<int> _nReqPerPartition;
 
 };
+
+} /* namespace warp */
 
 #endif /* CAPSSCHEDULER_H_ */

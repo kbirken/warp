@@ -18,6 +18,8 @@
 #include <utility>
 using namespace std;
 
+namespace warp {
+namespace model {
 
 // ***********************************************************************
 
@@ -29,7 +31,7 @@ CSimModel::CSimModel()
 CSimModel::~CSimModel()
 {
 	// clean-up
-	for (CResource::Vector::iterator it1 = _resources.begin(); it1!=_resources.end(); it1++) {
+	for (Resource::Vector::iterator it1 = _resources.begin(); it1!=_resources.end(); it1++) {
 		delete(*it1);
 	}
 	for (CStep::Vector::iterator it2 = _steps.begin(); it2!=_steps.end(); it2++) {
@@ -72,7 +74,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 	// add artificial resource for "wait time"
 	// (this resource can be used unlimited)
-	CResource* res = new CResource("wait", false);
+	Resource* res = new Resource("wait", false);
 	_resources.push_back(res);
 	_slots.push_back(res);
 
@@ -85,7 +87,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		}
 
 		// NB: cpu id as given for each FunctionBlock later in file must be identical to index in _resources vector
-		CResource* res = new CResource(in);
+		Resource* res = new Resource(in);
 		_resources.push_back(res);
 
 		// add slot(s) for this resource
@@ -224,7 +226,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		vector<int> values;
 		vector<int> averageCSTs;
 		for(int r=0; r<getNResources(); r++) {
-			const CResource* res = _resources[r];
+			const Resource* res = _resources[r];
 
 			int rv=0, cst=0;
 			int n = res->getNSlots();
@@ -495,3 +497,5 @@ void CSimModel::err (const char* fmt, ...)
 
 // ***********************************************************************
 
+} /* namespace model */
+} /* namespace warp */

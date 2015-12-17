@@ -6,10 +6,11 @@
  */
 
 #include "simulation/CAPSScheduler.h"
-#include "model/CResource.h"
+#include "model/Resource.h"
 
+namespace warp {
 
-CAPSScheduler::CAPSScheduler(const CResource* res) :
+CAPSScheduler::CAPSScheduler(const warp::model::Resource* res) :
 	_resource(res),
 	_nUsedPartitions(0),
 	_usedPartitionsSize(0),
@@ -53,3 +54,4 @@ int CAPSScheduler::getPartitionSize(int i) const
 	return _resource->getPartitionSize(i);
 }
 
+} /* namespace warp */

@@ -8,27 +8,27 @@ CPP_SRCS += \
 ../src/model/private/CFunctionBlock.cpp \
 ../src/model/private/CPool.cpp \
 ../src/model/private/CPoolVector.cpp \
-../src/model/private/CResource.cpp \
 ../src/model/private/CSimModel.cpp \
-../src/model/private/CStep.cpp 
+../src/model/private/CStep.cpp \
+../src/model/private/Resource.cpp 
 
 OBJS += \
 ./src/model/private/CBehaviour.o \
 ./src/model/private/CFunctionBlock.o \
 ./src/model/private/CPool.o \
 ./src/model/private/CPoolVector.o \
-./src/model/private/CResource.o \
 ./src/model/private/CSimModel.o \
-./src/model/private/CStep.o 
+./src/model/private/CStep.o \
+./src/model/private/Resource.o 
 
 CPP_DEPS += \
 ./src/model/private/CBehaviour.d \
 ./src/model/private/CFunctionBlock.d \
 ./src/model/private/CPool.d \
 ./src/model/private/CPoolVector.d \
-./src/model/private/CResource.d \
 ./src/model/private/CSimModel.d \
-./src/model/private/CStep.d 
+./src/model/private/CStep.d \
+./src/model/private/Resource.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

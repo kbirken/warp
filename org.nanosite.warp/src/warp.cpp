@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 	}
 
 	printf("warp is reading file %s\n", warpFile.c_str());
-	CSimModel model;
+	warp::model::CSimModel model;
 	if (! model.readFile(warpFile.c_str(), verbose>0)) {
 		printf("file could not be read due to previous errors!\n");
 		return 100;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 
 	// do simulation
 	{
-		CSimulatorCore core(verbose);
+		warp::CSimulatorCore core(verbose);
 
 		// inject initial steps
 		model.addInitials(core, core);

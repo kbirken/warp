@@ -12,9 +12,11 @@
 
 #include "model/CFunctionBlock.h"
 #include "model/CStep.h"
-#include "model/CResource.h"
+#include "model/Resource.h"
 #include "model/CPoolVector.h"
 
+namespace warp {
+namespace model {
 
 class CSimModel {
 public:
@@ -24,10 +26,10 @@ public:
 	bool readFile (const char* modelFilename, bool verbose);
 
 	int getNResources() const  { return _resources.size(); }
-	const CResource::Vector& getResources() const  { return _resources; }
+	const Resource::Vector& getResources() const  { return _resources; }
 
 	int getNSlots() const  { return _slots.size(); }
-	const CResource::Vector& getResourceSlots() const  { return _slots; }
+	const Resource::Vector& getResourceSlots() const  { return _slots; }
 	CPoolVector& getPools()  { return _pools; }
 
 	// inject initial steps into simulation engine
@@ -43,10 +45,10 @@ private:
 
 private:
 	// list of CResources, we are responsible for its memory
-	CResource::Vector _resources;
+	Resource::Vector _resources;
 
 	// a ResourceSlot is a request from a resource (or its ResourceInterface)
-	CResource::Vector _slots;
+	Resource::Vector _slots;
 
 	// resource pools
 	CPoolVector _pools;
@@ -61,5 +63,7 @@ private:
 	CBehaviour::Vector _initials;
 };
 
+} /* namespace model */
+} /* namespace warp */
 
 #endif /* SIMMODEL_H_ */

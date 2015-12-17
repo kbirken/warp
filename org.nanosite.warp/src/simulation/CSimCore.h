@@ -15,9 +15,10 @@ using namespace std;
 #include "simulation/ISimEventAcceptor.h"
 #include "simulation/ILogger.h"
 #include "simulation/CResourceSlotVector.h"
-#include "model/CResource.h"
+#include "model/Resource.h"
 #include "model/CStep.h"
 
+namespace warp {
 
 // forward declarations
 class CAPSScheduler;
@@ -37,8 +38,8 @@ public:
 
 	// run actual simulation
 	void run (
-			const CResource::Vector& resources,
-			const CResource::Vector& resourceInterfaces,
+			const model::Resource::Vector& resources,
+			const model::Resource::Vector& resourceInterfaces,
 			CPoolVector& pools,
 			bool withLoadfile,
 			string dotFileName);
@@ -57,7 +58,7 @@ private:
 
 	// progress one iteration during simulation run
 	bool iteration (
-			const CResource::Vector& resources,
+			const model::Resource::Vector& resources,
 			CPoolVector& pools,
 			Schedulers& scheds,
 			vector<bool> isLimited,
@@ -91,5 +92,6 @@ private:
 	TimeMap _runningMap;
 };
 
+} /* namespace warp */
 
 #endif // !defined(_SIMULATORCORE_H_INCLUDED_)

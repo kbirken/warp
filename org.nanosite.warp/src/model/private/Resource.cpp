@@ -1,22 +1,25 @@
 /*
- * CResource.cpp
+ * Resource.cpp
  *
  *  Created on: 05.08.2009
  *      Author: kbirken
  */
 
-#include "model/CResource.h"
+#include "model/Resource.h"
 
+namespace warp {
+namespace model {
 
-CResource::CResource (const char* name, bool isLimited) :
+Resource::Resource (const char* name, bool isLimited) :
 	_name(name),
 	_isLimited(isLimited),
-	_scheduling(SCHED_PLAIN)
+	_scheduling(SCHED_PLAIN),
+	_wholeSize(0)
 {
 }
 
 
-CResource::CResource (istream &in) :
+Resource::Resource (istream &in) :
 	_isLimited(true)  // resources read from file are limited by definition
 {
 	int nIfs;
@@ -33,7 +36,7 @@ CResource::CResource (istream &in) :
 	int sched;
 	in >> sched;
 	if (sched>=0 && sched<SCHED_MAX) {
-		_scheduling = (CResource::Scheduling)sched;
+		_scheduling = (Resource::Scheduling)sched;
 
 		if (_scheduling!=SCHED_PLAIN) {
 			// this is only valid for CPUs, other resources cannot (currently?) have partitions
@@ -66,28 +69,31 @@ CResource::CResource (istream &in) :
 }
 
 
-CResource::~CResource()
+Resource::~Resource()
 {
 }
 
 
-unsigned int CResource::getNSlots() const
+unsigned int Resource::getNSlots() const
 {
 	unsigned int n = _contextSwitchingTimes.size();
 	return n==0 ? 1 : n;
 }
 
 
-unsigned int CResource::getNInterfaces() const
+unsigned int Resource::getNInterfaces() const
 {
 	return _contextSwitchingTimes.size();
 }
 
 
-unsigned int CResource::getNPartitions() const
+unsigned int Resource::getNPartitions() const
 {
 	unsigned int n = _partitionSizes.size();
 	return n==0 ? 1 : n;
 }
 
+
+} /* namespace model */
+} /* namespace warp */
 
