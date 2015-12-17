@@ -5,10 +5,10 @@
  *      Author: kbirken
  */
 
+#include <model/CBehavior.h>
 #include "model/CSimModel.h"
 
 #include "model/Pool.h"
-#include "model/CBehaviour.h"
 #include "model/CStep.h"
 #include "sim/PoolSim.h"
 #include "simulation/ISimEventAcceptor.h"
@@ -128,7 +128,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 	}
 
 
-	// read list of function blocks and behaviours
+	// read list of function blocks and behaviors
 	int nFBs;
 	in >> nFBs;
 	if (nFBs<0 || nFBs>1000) {
@@ -138,9 +138,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 	printf("reading %d function blocks...\n", nFBs);
 
-	typedef pair<CBehaviour*,unsigned int> UnlessCond;
+	typedef pair<CBehavior*,unsigned int> UnlessCond;
 	typedef vector<UnlessCond> UnlessVector;
-	UnlessVector behavioursWithUnless;
+	UnlessVector behaviorsWithUnless;
 	for(int i=0; i<nFBs; i++) {
 		if (in.eof()) {
 			err("premature end of file - function block definition expected");
@@ -148,10 +148,10 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		}
 
 		string fbName;
-		int cpu, partition, nBehaviours;
-		in >> fbName >> cpu >> partition >> nBehaviours;
-		if (nBehaviours<0 || nBehaviours>1000) {
-			err("format error - invalid number of function blocks");
+		int cpu, partition, nBehaviors;
+		in >> fbName >> cpu >> partition >> nBehaviors;
+		if (nBehaviors<0 || nBehaviors>1000) {
+			err("format error - invalid number of behavior");
 			return false;
 		}
 
@@ -159,10 +159,10 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		CFunctionBlock* fb = new CFunctionBlock(fbName, cpu, partition-1);
 		_fbs.push_back(fb);
 
-		// read behaviours for this fb
-		for(int j=0; j<nBehaviours; j++) {
+		// read behaviors for this fb
+		for(int j=0; j<nBehaviors; j++) {
 			if (in.eof()) {
-				err("premature end of file - behaviour definition expected");
+				err("premature end of file - behavior definition expected");
 				return false;
 			}
 
@@ -171,15 +171,15 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 			int p = 0;
 
 			in >> bhvrName >> tok >> type;
-			if (type!=CBehaviour::LOOP_TYPE_ONCE) {
+			if (type!=CBehavior::LOOP_TYPE_ONCE) {
 				in >> p;
 			}
 			bool addToken = (tok>0);
-			CBehaviour* bhvr = new CBehaviour(*fb, bhvrName, type, p, addToken);
-			fb->addBehaviour(bhvr);
+			CBehavior* bhvr = new CBehavior(*fb, bhvrName, type, p, addToken);
+			fb->addBehavior(bhvr);
 
-			if (type==CBehaviour::LOOP_TYPE_UNLESS) {
-				behavioursWithUnless.push_back(make_pair(bhvr, p));
+			if (type==CBehavior::LOOP_TYPE_UNLESS) {
+				behaviorsWithUnless.push_back(make_pair(bhvr, p));
 			}
 		}
 	}
@@ -216,9 +216,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 			return false;
 		}
 
-		CBehaviour* bhvr = getBehaviour(fbi, bhvri);
+		CBehavior* bhvr = getBehavior(fbi, bhvri);
 		if (bhvr==0) {
-			err("format error - invalid behaviour id in definition of steps");
+			err("format error - invalid behavior id in definition of steps");
 			return false;
 		}
 		CFunctionBlock* fb = _fbs[fbi];
@@ -288,7 +288,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		_steps.push_back(step);
 		bhvr->addStep(step);
 
-		// set successor for previous step (if same FB and behaviour)
+		// set successor for previous step (if same FB and behavior)
 		if (previousStep) {
 			if (fbi==fbiLast && bhvri==bhvriLast) {
 				previousStep->addSuccessor(step);
@@ -305,17 +305,17 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		previousStep->setIsLast();
 	}
 
-	// steps have been read, now set unless conditions for some behaviours
-	for(vector<UnlessCond>::const_iterator i=behavioursWithUnless.begin(); i!=behavioursWithUnless.end(); ++i) {
-		CBehaviour* bhvr = i->first;
+	// steps have been read, now set unless conditions for some behaviors
+	for(vector<UnlessCond>::const_iterator i=behaviorsWithUnless.begin(); i!=behaviorsWithUnless.end(); ++i) {
+		CBehavior* bhvr = i->first;
 		unsigned int stepIdx = i->second;
 		if (stepIdx >= _steps.size()) {
-			err("format error - invalid 'unless' condition %d for behaviour %s",
+			err("format error - invalid 'unless' condition %d for behavior %s",
 					stepIdx, bhvr->getQualifiedName().c_str());
 			return false;
 		}
 		CStep* step = _steps[stepIdx];
-		//printf("unlessCond for behaviour %s is %s\n", bhvr->getQualifiedName().c_str(), step->getQualifiedName().c_str());
+		//printf("unlessCond for behavior %s is %s\n", bhvr->getQualifiedName().c_str(), step->getQualifiedName().c_str());
 		bhvr->setUnlessCondition(step);
 	}
 
@@ -336,24 +336,24 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		int fbi, bhvri;
 		in >> fbi >> bhvri;
 
-		CBehaviour* bhvr = getBehaviour(fbi, bhvri);
+		CBehavior* bhvr = getBehavior(fbi, bhvri);
 		if (bhvr==0) {
-			err("format error - invalid fb/behaviour id in definition of initial triggers");
+			err("format error - invalid fb/behavior id in definition of initial triggers");
 			return false;
 		}
 
 		_initials.push_back(bhvr);
 	}
 
-	// read list of send triggers for each behaviour
+	// read list of send triggers for each behavior
 	int nBhvr;
 	in >> nBhvr;
 	if (nBhvr<0 || nBhvr>1000) {
-		err("format error - invalid number of behaviours in send triggers list");
+		err("format error - invalid number of behaviors in send triggers list");
 		return false;
 	}
 
-	printf("reading send triggers for %d behaviours...\n", nBhvr);
+	printf("reading send triggers for %d behaviors...\n", nBhvr);
 	for(int i=0; i<nBhvr; i++) {
 		if (in.eof()) {
 			err("premature end of file - send trigger definition expected");
@@ -363,9 +363,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		int fbi, bhvri, nSends;
 		in >> fbi >> bhvri >> nSends;
 
-		CBehaviour* bhvr = getBehaviour(fbi, bhvri);
+		CBehavior* bhvr = getBehavior(fbi, bhvri);
 		if (bhvr==0) {
-			err("format error - invalid fb/behaviour id in send triggers list");
+			err("format error - invalid fb/behavior id in send triggers list");
 			return false;
 		}
 
@@ -383,9 +383,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 			int fbi2, bhvri2;
 			in >> fbi2 >> bhvri2;
 
-			CBehaviour* bhvr2 = getBehaviour(fbi2, bhvri2);
+			CBehavior* bhvr2 = getBehavior(fbi2, bhvri2);
 			if (bhvr2==0) {
-				err("format error - invalid target fb/behaviour id in send triggers list");
+				err("format error - invalid target fb/behavior id in send triggers list");
 				return false;
 			}
 
@@ -439,8 +439,8 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 void CSimModel::addInitials (ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
-	for(CBehaviour::Vector::iterator it = _initials.begin(); it!=_initials.end(); it++) {
-		CBehaviour* bhvr = *it;
+	for(CBehavior::Vector::iterator it = _initials.begin(); it!=_initials.end(); it++) {
+		CBehavior* bhvr = *it;
 
 		CToken* tok = CTokenFactory::instance()->createToken(bhvr->getQualifiedName());
 		CMessage* msg = new CMessage(tok);
@@ -455,10 +455,10 @@ int CSimModel::checkRemnants (void) const
 {
 	int nRemnants = 0;
 	for (CFunctionBlock::Vector::const_iterator it = _fbs.begin(); it!=_fbs.end(); it++) {
-		const CBehaviour::Vector& bhvrs = (*it)->getBehaviours();
-		for (CBehaviour::Vector::const_iterator bhvr = bhvrs.begin(); bhvr!=bhvrs.end(); bhvr++) {
+		const CBehavior::Vector& bhvrs = (*it)->getBehaviors();
+		for (CBehavior::Vector::const_iterator bhvr = bhvrs.begin(); bhvr!=bhvrs.end(); bhvr++) {
 			if (! (*bhvr)->hasFinishedOnce()) {
-				printf("Behaviour hasn't been executed: %s.\n", (*bhvr)->getQualifiedName().c_str());
+				printf("Behavior hasn't been executed: %s.\n", (*bhvr)->getQualifiedName().c_str());
 				nRemnants++;
 			}
 		}
@@ -470,14 +470,14 @@ int CSimModel::checkRemnants (void) const
 
 // ***********************************************************************
 
-CBehaviour* CSimModel::getBehaviour (unsigned int fbIndex, int bhvrIndex) const
+CBehavior* CSimModel::getBehavior (unsigned int fbIndex, int bhvrIndex) const
 {
 	if (fbIndex>=_fbs.size()) {
 		return 0;
 	}
 	CFunctionBlock* fb = _fbs[fbIndex];
 
-	CBehaviour* bhvr = fb->getBehaviour(bhvrIndex);
+	CBehavior* bhvr = fb->getBehavior(bhvrIndex);
 	return bhvr;
 }
 

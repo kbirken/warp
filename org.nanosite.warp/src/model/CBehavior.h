@@ -1,9 +1,9 @@
-// CBehaviour: interface for the CBehaviour class.
+// CBehavior: interface for the CBehavior class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef WARP_BEHAVIOUR_H_
-#define WARP_BEHAVIOUR_H_
+#ifndef WARP_BEHAVIOR_H_
+#define WARP_BEHAVIOR_H_
 
 #include <string>
 #include <vector>
@@ -19,10 +19,10 @@ namespace warp {
 	class CFunctionBlock;
 	class ISimEventAcceptor;
 
-	class CBehaviour : public IStepSuccessor
+	class CBehavior : public IStepSuccessor
 	{
 	public:
-		typedef vector<CBehaviour*> Vector;
+		typedef vector<CBehavior*> Vector;
 
 		enum {
 			LOOP_TYPE_ONCE = 0,
@@ -31,19 +31,19 @@ namespace warp {
 			LOOP_TYPE_UNLESS = 3
 		} LoopType;
 
-		CBehaviour(const CFunctionBlock& fb, string name, int type, int p, bool addToken);
-		virtual ~CBehaviour();
+		CBehavior(const CFunctionBlock& fb, string name, int type, int p, bool addToken);
+		virtual ~CBehavior();
 
-		int compare(const CBehaviour &other) const;
-		bool operator==(const CBehaviour &other) const { return compare(other)==0; }
-		bool operator!=(const CBehaviour &other) const { return compare(other)!=0; }
+		int compare(const CBehavior &other) const;
+		bool operator==(const CBehavior &other) const { return compare(other)==0; }
+		bool operator!=(const CBehavior &other) const { return compare(other)!=0; }
 
 		string getName() const  { return _name; }
 		string getQualifiedName() const;
 		string getDotId() const;
 
 		void addStep (CStep* step);
-		void addSendTrigger (CBehaviour* bhvr);
+		void addSendTrigger (CBehavior* bhvr);
 		void setUnlessCondition (CStep* step);
 
 		bool hasUnlessCondition() const;
@@ -56,10 +56,10 @@ namespace warp {
 
 		void receiveTrigger (const CStep* from, CMessage* msg, ISimEventAcceptor& eventAcceptor, ILogger& logger);
 
-		// this will be called by the behaviour's first step (if waiting for preconditions is over)
+		// this will be called by the behavior's first step (if waiting for preconditions is over)
 		bool isRunning() const  { return _current_msg!=0; }
 
-		// this will be called by the behaviour's last step (each time after it is done)
+		// this will be called by the behavior's last step (each time after it is done)
 		void lastStepDone (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger);
 
 		// IStepSuccessor interface
@@ -73,7 +73,7 @@ namespace warp {
 
 		void closeAction (ILogger& logger);
 
-		CToken* genToken (CToken* parent, CBehaviour* next) const;
+		CToken* genToken (CToken* parent, CBehavior* next) const;
 
 		void log (ILogger& logger, int level, CMessage* msg, string action) const;
 
@@ -90,7 +90,7 @@ namespace warp {
 		// condition for "unless" loop
 		CStep* _unless_condition;
 
-		// list of send target CBehaviours
+		// list of send target CBehaviors
 		Vector _send_triggers;
 
 		bool _finished_once;
@@ -104,4 +104,4 @@ namespace warp {
 } /* namespace warp */
 
 
-#endif /* WARP_BEHAVIOUR_H_ */
+#endif /* WARP_BEHAVIOR_H_ */

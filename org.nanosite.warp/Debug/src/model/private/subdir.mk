@@ -4,7 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/model/private/CBehaviour.cpp \
+../src/model/private/CBehavior.cpp \
 ../src/model/private/CFunctionBlock.cpp \
 ../src/model/private/CSimModel.cpp \
 ../src/model/private/CStep.cpp \
@@ -12,7 +12,7 @@ CPP_SRCS += \
 ../src/model/private/Resource.cpp 
 
 OBJS += \
-./src/model/private/CBehaviour.o \
+./src/model/private/CBehavior.o \
 ./src/model/private/CFunctionBlock.o \
 ./src/model/private/CSimModel.o \
 ./src/model/private/CStep.o \
@@ -20,7 +20,7 @@ OBJS += \
 ./src/model/private/Resource.o 
 
 CPP_DEPS += \
-./src/model/private/CBehaviour.d \
+./src/model/private/CBehavior.d \
 ./src/model/private/CFunctionBlock.d \
 ./src/model/private/CSimModel.d \
 ./src/model/private/CStep.d \

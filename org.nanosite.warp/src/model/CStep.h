@@ -21,7 +21,7 @@ class ILogger;
 namespace warp {
 
 	// forward declarations
-	class CBehaviour;
+	class CBehavior;
 	class ISimEventAcceptor;
 
 	class CStep : public IStepSuccessor {
@@ -29,7 +29,7 @@ namespace warp {
 		typedef vector<CStep*> Vector;
 
 		CStep(int id,
-				/*const*/ CBehaviour& bhvr,
+				/*const*/ CBehavior& bhvr,
 				string name,
 				int milestone,
 				unsigned int cpu,
@@ -40,7 +40,7 @@ namespace warp {
 
 		virtual ~CStep();
 
-		const CBehaviour& getBehaviour (void) const;
+		const CBehavior& getBehavior (void) const;
 		unsigned int getCPU() const  { return _cpu; }
 		unsigned int getPartition() const  { return _partition; }
 
@@ -48,7 +48,7 @@ namespace warp {
 		void setIsLast()  { _isLast = true; }
 		bool isLast() const  { return _isLast; }
 
-		void addSuccessor (CBehaviour* behaviour);
+		void addSuccessor (CBehavior* behavior);
 		void addSuccessor (CStep* step);
 
 		const CResourceVector& getCurrentResourceNeeds() const  { return *_resourceNeeds; }
@@ -98,7 +98,7 @@ namespace warp {
 
 	private:
 		int _id;
-		/*const*/ CBehaviour& _bhvr;
+		/*const*/ CBehavior& _bhvr;
 		string _name;
 		int _milestone;
 		unsigned int _cpu;  // same as in this step's functionblock

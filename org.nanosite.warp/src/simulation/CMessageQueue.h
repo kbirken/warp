@@ -9,7 +9,7 @@
 #include <queue>
 using namespace std;
 
-//#include "CBehaviour.h"
+//#include "CBehavior.h"
 
 // forward decl
 class CMessage;

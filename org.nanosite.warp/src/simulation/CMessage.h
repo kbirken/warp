@@ -9,7 +9,7 @@
 //#include <vector>
 using namespace std;
 
-//#include "CBehaviour.h"
+//#include "CBehavior.h"
 
 // forward decl
 class CToken;

@@ -16,7 +16,7 @@ using namespace std;
 
 namespace warp {
 
-CStep::CStep (int id, /*const*/ CBehaviour& bhvr, string name,
+CStep::CStep (int id, /*const*/ CBehavior& bhvr, string name,
 		int milestone, unsigned int cpu, unsigned int partition,
 		CResourceVector* rv,
 		CResourceVector* averageCST,
@@ -48,10 +48,10 @@ CStep::~CStep()
 }
 
 
-void CStep::addSuccessor (CBehaviour* behaviour)
+void CStep::addSuccessor (CBehavior* behavior)
 {
-	//printf("succ %s => %s\n", getQualifiedName().c_str(), behaviour->getQualifiedName().c_str());
-	_successors.push_back(behaviour);
+	//printf("succ %s => %s\n", getQualifiedName().c_str(), behavior->getQualifiedName().c_str());
+	_successors.push_back(behavior);
 }
 
 void CStep::addSuccessor (CStep* step)
@@ -60,7 +60,7 @@ void CStep::addSuccessor (CStep* step)
 	_successors.push_back(step);
 
 	if (_bhvr == step->_bhvr) {
-		// remember as direct predecessor in behaviour
+		// remember as direct predecessor in behavior
 		// will be added to _waitFor during prepareExecution()
 		step->_directPredecessor = this;
 	} else {
@@ -70,7 +70,7 @@ void CStep::addSuccessor (CStep* step)
 }
 
 
-const CBehaviour& CStep::getBehaviour(void) const
+const CBehavior& CStep::getBehavior(void) const
 {
 	return _bhvr;
 }
@@ -91,7 +91,7 @@ void CStep::prepareExecution (void)
 	_resourceNeeds = new CResourceVector(*_initialResourceNeeds);
 
 	if (_directPredecessor) {
-		// on restart of the behaviour, we add the direct predecessor as only waitFor element
+		// on restart of the behavior, we add the direct predecessor as only waitFor element
 		_waitFor.push_back(_directPredecessor);
 	}
 }
@@ -119,7 +119,7 @@ void CStep::done (const CStep* step, ISimEventAcceptor& eventAcceptor)
 	if (_waitFor.size()==0) {
 		// waiting is over
 		if (_isFirst) {
-			// first step has to ask behaviour if trigger has been received yet
+			// first step has to ask behavior if trigger has been received yet
 			if (_bhvr.isRunning()) {
 				runNow = true;
 			}
@@ -379,7 +379,7 @@ void CStep::exitActions(ISimEventAcceptor& eventAcceptor, ILogger& logger)
 		(*it)->done(this, eventAcceptor);
 	}
 
-	// if this is the last step in one behaviour, also tell behaviour that we are ready
+	// if this is the last step in one behavior, also tell behavior that we are ready
 	if (_isLast) {
 		_bhvr.lastStepDone(this, eventAcceptor, logger);
 	}

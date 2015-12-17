@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-#include "model/CBehaviour.h"
+#include <model/CBehavior.h>
 
 // forward decl
 //class ISimEventAcceptor;
@@ -28,9 +28,9 @@ namespace warp {
 		bool operator==(const CFunctionBlock &other) const { return compare(other)==0; }
 		bool operator!=(const CFunctionBlock &other) const { return compare(other)!=0; }
 
-		void addBehaviour (CBehaviour* bhvr);
-		CBehaviour* getBehaviour (unsigned int i);
-		const CBehaviour::Vector& getBehaviours() const  { return _behaviours; };
+		void addBehavior (CBehavior* bhvr);
+		CBehavior* getBehavior (unsigned int i);
+		const CBehavior::Vector& getBehaviors() const  { return _behaviors; };
 
 		void prepareExecution (void);
 
@@ -46,8 +46,8 @@ namespace warp {
 		unsigned int _cpu;
 		unsigned int _partition;
 
-		// list of CBehaviours, we are responsible for its memory
-		CBehaviour::Vector _behaviours;
+		// list of CBehaviors, we are responsible for its memory
+		CBehavior::Vector _behaviors;
 	};
 
 } /* namespace warp */

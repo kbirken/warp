@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "model/CFunctionBlock.h"
-#include "model/CBehaviour.h"
+#include <model/CBehavior.h>
 
 namespace warp {
 
@@ -23,7 +23,7 @@ CFunctionBlock::CFunctionBlock (string name, unsigned int cpu, unsigned int part
 
 CFunctionBlock::~CFunctionBlock()
 {
-	for (CBehaviour::Vector::iterator it = _behaviours.begin(); it!=_behaviours.end(); it++) {
+	for (CBehavior::Vector::iterator it = _behaviors.begin(); it!=_behaviors.end(); it++) {
 		delete(*it);
 	}
 }
@@ -38,20 +38,20 @@ int CFunctionBlock::compare(const CFunctionBlock &other) const {
 }
 
 
-void CFunctionBlock::addBehaviour (CBehaviour* bhvr)
+void CFunctionBlock::addBehavior (CBehavior* bhvr)
 {
 	//printf("succ %s => %s\n", getQualifiedName().c_str(), step->getQualifiedName().c_str());
-	_behaviours.push_back(bhvr);
+	_behaviors.push_back(bhvr);
 }
 
 
-CBehaviour* CFunctionBlock::getBehaviour (unsigned int i)
+CBehavior* CFunctionBlock::getBehavior (unsigned int i)
 {
-	if (i>=_behaviours.size()) {
+	if (i>=_behaviors.size()) {
 		return 0;
 	}
 
-	return _behaviours[i];
+	return _behaviors[i];
 }
 
 
@@ -60,8 +60,8 @@ void CFunctionBlock::prepareExecution (void)
 	//printf("CFunctionBlock::prepareExecution %s\n", _name.c_str());
 
 	// prepare all steps for this execution
-	for(unsigned int i=0; i<_behaviours.size(); i++) {
-		_behaviours[i]->prepareExecution();
+	for(unsigned int i=0; i<_behaviors.size(); i++) {
+		_behaviors[i]->prepareExecution();
 	}
 }
 

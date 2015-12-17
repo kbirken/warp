@@ -4,11 +4,11 @@
 
 #include <stdio.h>
 #include <limits.h>
+#include <model/CBehavior.h>
 
 #include "simulation/CSimCore.h"
 #include "simulation/CAPSScheduler.h"
 #include "simulation/CIntAccuracy.h"
-#include "model/CBehaviour.h"
 
 namespace warp {
 
@@ -104,14 +104,14 @@ void CSimulatorCore::drawDotNode (CStep* step, string color, string more) {
 void CSimulatorCore::drawNode (CStep* step) {
 	string color = "lightgrey";
 	string more = "";
-	const CBehaviour& bhvr = step->getBehaviour();
+	const CBehavior& bhvr = step->getBehavior();
 
 	if (bhvr.hasUnlessCondition()) {
 		color = "cyan";
 
 		if (step->isLast()) {
 			if (! bhvr.getUnlessCondition()) {
-				// last step in this behaviour will be drawn for last iteration
+				// last step in this behavior will be drawn for last iteration
 				return;
 			} else {
 				// some additional information for last step
@@ -149,8 +149,8 @@ void CSimulatorCore::signalReady (const CStep* from, const CStep* to, bool unblo
 {
 	if (_dotfile) {
 		string col = "blue";
-		const CBehaviour& fromBhvr = from->getBehaviour();
-		if (fromBhvr==to->getBehaviour()) {
+		const CBehavior& fromBhvr = from->getBehavior();
+		if (fromBhvr==to->getBehavior()) {
 			col = "black";
 			if (fromBhvr.hasUnlessCondition() && fromBhvr.hasFinishedOnce()) {
 				// we have drawn during first run, don't draw anymore

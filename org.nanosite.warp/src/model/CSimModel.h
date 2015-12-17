@@ -39,7 +39,7 @@ public:
 	int checkRemnants (void) const;
 
 private:
-	CBehaviour* getBehaviour (unsigned int fbIndex, int bhvrIndex) const;
+	CBehavior* getBehavior (unsigned int fbIndex, int bhvrIndex) const;
 
 	static void err (const char* fmt, ...);
 
@@ -59,8 +59,8 @@ private:
 	// list of CSteps, we are responsible for its memory
 	CStep::Vector _steps;
 
-	// subset of CBehaviours containing all initially triggered behaviours
-	CBehaviour::Vector _initials;
+	// subset of CBehaviors containing all initially triggered behaviors
+	CBehavior::Vector _initials;
 };
 
 } /* namespace model */

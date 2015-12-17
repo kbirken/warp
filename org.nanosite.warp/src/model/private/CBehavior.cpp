@@ -1,9 +1,8 @@
-// CBehaviour: implementation of the CBehaviour class.
+// CBehavior: implementation of the CBehavior class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "model/CBehaviour.h"
-
+#include <model/CBehavior.h>
 #include "model/CFunctionBlock.h"
 #include "model/CStep.h"
 #include "simulation/CToken.h"
@@ -19,7 +18,7 @@ using namespace std;
 
 namespace warp {
 
-CBehaviour::CBehaviour (const CFunctionBlock& fb, string name, int type, int p, bool addToken) :
+CBehavior::CBehavior (const CFunctionBlock& fb, string name, int type, int p, bool addToken) :
 	_fb(fb),
 	_name(name),
 	_type(type),
@@ -36,11 +35,11 @@ CBehaviour::CBehaviour (const CFunctionBlock& fb, string name, int type, int p, 
 }
 
 
-CBehaviour::~CBehaviour()
+CBehavior::~CBehavior()
 {
 }
 
-int CBehaviour::compare(const CBehaviour &other) const {
+int CBehavior::compare(const CBehavior &other) const {
 	int fb = _fb.compare(other._fb);
 	if (fb!=0)
 		return fb;
@@ -52,30 +51,30 @@ int CBehaviour::compare(const CBehaviour &other) const {
 	return 0;
 }
 
-string CBehaviour::getQualifiedName() const
+string CBehavior::getQualifiedName() const
 {
 	return _fb.getName() + "::" + _name;
 }
 
-string CBehaviour::getDotId() const
+string CBehavior::getDotId() const
 {
 	return _fb.getDotId() + "_" + _name;
 }
 
 
 
-void CBehaviour::addStep (CStep* step)
+void CBehavior::addStep (CStep* step)
 {
 	_steps.push_back(step);
 }
 
 
-void CBehaviour::addSendTrigger (CBehaviour* bhvr)
+void CBehavior::addSendTrigger (CBehavior* bhvr)
 {
 	_send_triggers.push_back(bhvr);
 }
 
-void CBehaviour::setUnlessCondition (CStep* step)
+void CBehavior::setUnlessCondition (CStep* step)
 {
 	_unless_condition = step;
 	_current_unless_condition = false;
@@ -84,20 +83,20 @@ void CBehaviour::setUnlessCondition (CStep* step)
 	step->addSuccessor(this);
 }
 
-bool CBehaviour::hasUnlessCondition() const
+bool CBehavior::hasUnlessCondition() const
 {
 	return _type==LOOP_TYPE_UNLESS;
 }
 
-bool CBehaviour::getUnlessCondition() const
+bool CBehavior::getUnlessCondition() const
 {
 	return _current_unless_condition;
 }
 
 
-void CBehaviour::prepareExecution (void)
+void CBehavior::prepareExecution (void)
 {
-	//printf("CBehaviour::prepareExecution %s\n", getQualifiedName().c_str());
+	//printf("CBehavior::prepareExecution %s\n", getQualifiedName().c_str());
 
 	// prepare all steps for this execution
 	for(unsigned int i=0; i<_steps.size(); i++) {
@@ -108,7 +107,7 @@ void CBehaviour::prepareExecution (void)
 
 // ***********************************************************************
 
-void CBehaviour::receiveTrigger (const CStep* from, CMessage* msg, ISimEventAcceptor& eventAcceptor, ILogger& logger)
+void CBehavior::receiveTrigger (const CStep* from, CMessage* msg, ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
 	log(logger, 2, msg, "RECV ");
 
@@ -127,7 +126,7 @@ void CBehaviour::receiveTrigger (const CStep* from, CMessage* msg, ISimEventAcce
 }
 
 
-void CBehaviour::lastStepDone (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
+void CBehavior::lastStepDone (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
 	_finished_once = true;
 
@@ -143,7 +142,7 @@ void CBehaviour::lastStepDone (const CStep* from, ISimEventAcceptor& eventAccept
 	// TODO: fully implement "repeat" handling based on _type
 	switch (_type) {
 	case LOOP_TYPE_ONCE:
-		// simple behaviour, one execution per trigger
+		// simple behavior, one execution per trigger
 		break;
 	case LOOP_TYPE_REPEAT:
 		// repeat-loop (_p is loop count)
@@ -154,12 +153,12 @@ void CBehaviour::lastStepDone (const CStep* from, ISimEventAcceptor& eventAccept
 		break;
 	case LOOP_TYPE_UNTIL:
 		// NIY
-		logger.fatal("invalid behaviour %s - type %d not yet implemented\n", getQualifiedName().c_str(), _type);
+		logger.fatal("invalid behavior %s - type %d not yet implemented\n", getQualifiedName().c_str(), _type);
 		break;
 	case LOOP_TYPE_UNLESS:
 		if (! _current_unless_condition) {
 			/*
-			logger.log("INFO", "still waiting for unless condition in behaviour %s: %s",
+			logger.log("INFO", "still waiting for unless condition in behavior %s: %s",
 					getQualifiedName().c_str(),
 					_unless_condition->getQualifiedName().c_str());
 			*/
@@ -174,7 +173,7 @@ void CBehaviour::lastStepDone (const CStep* from, ISimEventAcceptor& eventAccept
 		break;
 	default:
 		// shouldn't happen
-		logger.fatal("invalid behaviour %s - unknown type %d\n", getQualifiedName().c_str(), _type);
+		logger.fatal("invalid behavior %s - unknown type %d\n", getQualifiedName().c_str(), _type);
 	}
 
 	// prepare for next incoming message
@@ -191,7 +190,7 @@ void CBehaviour::lastStepDone (const CStep* from, ISimEventAcceptor& eventAccept
 
 
 // this is called to set 'unless' conditions
-void CBehaviour::done (const CStep* from, ISimEventAcceptor& eventAcceptor)
+void CBehavior::done (const CStep* from, ISimEventAcceptor& eventAcceptor)
 {
 	// we simply clear unless condition (forever)
 	// this will be checked before any execution of the loop
@@ -199,7 +198,7 @@ void CBehaviour::done (const CStep* from, ISimEventAcceptor& eventAcceptor)
 }
 
 
-void CBehaviour::handleTrigger (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
+void CBehavior::handleTrigger (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
 	if (_steps.size()>0) {
 		CStep* first = _steps[0];
@@ -210,20 +209,20 @@ void CBehaviour::handleTrigger (const CStep* from, ISimEventAcceptor& eventAccep
 				eventAcceptor.signalSend(from, first, false);
 			}
 		} else {
-			// immediately run first step of this behaviour
+			// immediately run first step of this behavior
 			eventAcceptor.setReady(first);
 			if (! (_type==LOOP_TYPE_UNLESS && _iteration>0)) {
 				eventAcceptor.signalSend(from, first, true);
 			}
 		}
 	} else {
-		// there are no steps in this behaviour, recursively call send triggers
+		// there are no steps in this behavior, recursively call send triggers
 		int n = 1;
 		if (_type==LOOP_TYPE_REPEAT) {
 			n = _p;
 		}
 		if (_type==LOOP_TYPE_UNLESS) {
-			logger.fatal("invalid behaviour %s: unless-condition given, but no steps", getQualifiedName().c_str());
+			logger.fatal("invalid behavior %s: unless-condition given, but no steps", getQualifiedName().c_str());
 		}
 		for(int i=0; i<n; i++) {
 			sendTriggers(from, eventAcceptor, logger);
@@ -235,7 +234,7 @@ void CBehaviour::handleTrigger (const CStep* from, ISimEventAcceptor& eventAccep
 }
 
 
-void CBehaviour::closeAction (ILogger& logger)
+void CBehavior::closeAction (ILogger& logger)
 {
 	log(logger, 1, _current_msg, "READY");
 
@@ -244,13 +243,13 @@ void CBehaviour::closeAction (ILogger& logger)
 }
 
 
-void CBehaviour::sendTriggers (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
+void CBehavior::sendTriggers (const CStep* from, ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
-	// send triggers to successor behaviours
+	// send triggers to successor behaviors
 	CToken* token = _current_msg->getToken();
 	for(Vector::iterator it = _send_triggers.begin(); it!=_send_triggers.end(); it++) {
 		if (_addToken) {
-			// this behaviour generates its own tokens
+			// this behavior generates its own tokens
 			token = genToken(token, *it);
 		}
 		CMessage* msg = new CMessage(token);
@@ -259,7 +258,7 @@ void CBehaviour::sendTriggers (const CStep* from, ISimEventAcceptor& eventAccept
 }
 
 
-CToken* CBehaviour::genToken (CToken* parent, CBehaviour* next) const
+CToken* CBehavior::genToken (CToken* parent, CBehavior* next) const
 {
 	static char buf[20];
 
@@ -273,7 +272,7 @@ CToken* CBehaviour::genToken (CToken* parent, CBehaviour* next) const
 }
 
 
-void CBehaviour::log (ILogger& logger, int level, CMessage* msg, string action) const
+void CBehavior::log (ILogger& logger, int level, CMessage* msg, string action) const
 {
 	if (logger.verbose() > level) {
 		logger.log("TOKEN", "%s %s at %s\n",
@@ -286,7 +285,7 @@ void CBehaviour::log (ILogger& logger, int level, CMessage* msg, string action) 
 }
 
 
-void CBehaviour::print() const
+void CBehavior::print() const
 {
 	printf("Behavior %s\n", _name.c_str());
 }
