@@ -172,7 +172,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 				in >> p;
 			}
 			bool addToken = (tok>0);
-			CBehaviour* bhvr = new CBehaviour(fb, bhvrName, type, p, addToken);
+			CBehaviour* bhvr = new CBehaviour(*fb, bhvrName, type, p, addToken);
 			fb->addBehaviour(bhvr);
 
 			if (type==CBehaviour::LOOP_TYPE_UNLESS) {
@@ -274,7 +274,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 		// create CStep and corresponding CResourceVector
 		CStep* step =
-				new CStep(id, bhvr, s, milestoneType, fb->getCPU(), fb->getPartition(),
+				new CStep(id, *bhvr, s, milestoneType, fb->getCPU(), fb->getPartition(),
 						new CResourceVector(values),
 						new CResourceVector(averageCSTs),
 						poolVals
@@ -469,7 +469,7 @@ int CSimModel::checkRemnants (void) const
 
 CBehaviour* CSimModel::getBehaviour (unsigned int fbIndex, int bhvrIndex) const
 {
-	if (fbIndex<0 || fbIndex>=_fbs.size()) {
+	if (fbIndex>=_fbs.size()) {
 		return 0;
 	}
 	CFunctionBlock* fb = _fbs[fbIndex];

@@ -102,23 +102,23 @@ void CSimulatorCore::drawDotNode (CStep* step, string color, string more) {
 void CSimulatorCore::drawNode (CStep* step) {
 	string color = "lightgrey";
 	string more = "";
-	const CBehaviour* bhvr = step->getBehaviour();
+	const CBehaviour& bhvr = step->getBehaviour();
 
-	if (bhvr->hasUnlessCondition()) {
+	if (bhvr.hasUnlessCondition()) {
 		color = "cyan";
 
 		if (step->isLast()) {
-			if (! bhvr->getUnlessCondition()) {
+			if (! bhvr.getUnlessCondition()) {
 				// last step in this behaviour will be drawn for last iteration
 				return;
 			} else {
 				// some additional information for last step
 				char txt[32];
-				sprintf(txt, "%d", bhvr->getIterations());
+				sprintf(txt, "%d", bhvr.getIterations());
 				more = string(txt) + " iterations";
 			}
 		} else {
-			if (bhvr->hasFinishedOnce()) {
+			if (bhvr.hasFinishedOnce()) {
 				// all other steps will be drawn only the first time, don't draw now
 				return;
 			}
@@ -147,10 +147,10 @@ void CSimulatorCore::signalReady (const CStep* from, const CStep* to, bool unblo
 {
 	if (_dotfile) {
 		string col = "blue";
-		const CBehaviour* fromBhvr = from->getBehaviour();
-		if (fromBhvr == to->getBehaviour()) {
+		const CBehaviour& fromBhvr = from->getBehaviour();
+		if (fromBhvr==to->getBehaviour()) {
 			col = "black";
-			if (fromBhvr->hasUnlessCondition() && fromBhvr->hasFinishedOnce()) {
+			if (fromBhvr.hasUnlessCondition() && fromBhvr.hasFinishedOnce()) {
 				// we have drawn during first run, don't draw anymore
 				return;
 			}

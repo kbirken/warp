@@ -25,7 +25,7 @@ public:
 	typedef vector<CStep*> Vector;
 
 	CStep(int id,
-			CBehaviour* bhvr,
+			/*const*/ CBehaviour& bhvr,
 			string name,
 			int milestone,
 			unsigned int cpu,
@@ -36,7 +36,7 @@ public:
 
 	virtual ~CStep();
 
-	const CBehaviour* getBehaviour (void) const;
+	const CBehaviour& getBehaviour (void) const;
 	unsigned int getCPU() const  { return _cpu; }
 	unsigned int getPartition() const  { return _partition; }
 
@@ -94,7 +94,7 @@ public:
 
 private:
 	int _id;
-	CBehaviour* _bhvr;
+	/*const*/ CBehaviour& _bhvr;
 	string _name;
 	int _milestone;
 	unsigned int _cpu;  // same as in this step's functionblock

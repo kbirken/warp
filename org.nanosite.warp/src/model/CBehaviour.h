@@ -30,8 +30,12 @@ public:
 		LOOP_TYPE_UNLESS = 3
 	} LoopType;
 
-	CBehaviour(CFunctionBlock* fb, string name, int type, int p, bool addToken);
+	CBehaviour(const CFunctionBlock& fb, string name, int type, int p, bool addToken);
 	virtual ~CBehaviour();
+
+	int compare(const CBehaviour &other) const;
+	bool operator==(const CBehaviour &other) const { return compare(other)==0; }
+	bool operator!=(const CBehaviour &other) const { return compare(other)!=0; }
 
 	string getName() const  { return _name; }
 	string getQualifiedName() const;
@@ -73,7 +77,7 @@ private:
 	void log (ILogger& logger, int level, CMessage* msg, string action) const;
 
 private:
-	CFunctionBlock* _fb;
+	const CFunctionBlock& _fb;
 	string _name;
 	int _type;
 	int _p;
@@ -95,6 +99,7 @@ private:
 	CMessageQueue _queue;
 	bool _current_unless_condition;
 };
+
 
 
 #endif // !defined(_BEHAVIOUR_H_INCLUDED_)

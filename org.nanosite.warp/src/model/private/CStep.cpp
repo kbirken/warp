@@ -19,7 +19,7 @@ using namespace std;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CStep::CStep (int id, CBehaviour* bhvr, string name,
+CStep::CStep (int id, /*const*/ CBehaviour& bhvr, string name,
 		int milestone, unsigned int cpu, unsigned int partition,
 		CResourceVector* rv,
 		CResourceVector* averageCST,
@@ -73,7 +73,7 @@ void CStep::addSuccessor (CStep* step)
 }
 
 
-const CBehaviour* CStep::getBehaviour (void) const
+const CBehaviour& CStep::getBehaviour(void) const
 {
 	return _bhvr;
 }
@@ -122,7 +122,7 @@ void CStep::done (const CStep* step, ISimEventAcceptor& eventAcceptor)
 		// waiting is over
 		if (_isFirst) {
 			// first step has to ask behaviour if trigger has been received yet
-			if (_bhvr->isRunning()) {
+			if (_bhvr.isRunning()) {
 				runNow = true;
 			}
 		} else {
@@ -157,7 +157,7 @@ void CStep::printWaitingList() const
 
 string CStep::getQualifiedName() const
 {
-	return _bhvr->getQualifiedName() + "::" + _name;
+	return _bhvr.getQualifiedName() + "::" + _name;
 }
 
 string CStep::getPrevDotId () const
@@ -165,7 +165,7 @@ string CStep::getPrevDotId () const
 	char txt[32];
 
 	sprintf(txt, "_%d", _dotInstance-1);
-	return _bhvr->getDotId() + "_" + _name + txt;
+	return _bhvr.getDotId() + "_" + _name + txt;
 }
 
 string CStep::getDotId (bool next) const
@@ -173,12 +173,12 @@ string CStep::getDotId (bool next) const
 	char txt[32];
 
 	sprintf(txt, "_%d", next ? _dotInstance+1 : _dotInstance);
-	return _bhvr->getDotId() + "_" + _name + txt;
+	return _bhvr.getDotId() + "_" + _name + txt;
 }
 
 string CStep::getDotLabel() const
 {
-	return _bhvr->getQualifiedName() + "\\n" + _name;
+	return _bhvr.getQualifiedName() + "\\n" + _name;
 }
 
 bool CStep::isInternalMilestone() const
@@ -374,7 +374,7 @@ bool CStep::consume (int delta,
 }
 
 
-void CStep::exitActions (ISimEventAcceptor& eventAcceptor, ILogger& logger)
+void CStep::exitActions(ISimEventAcceptor& eventAcceptor, ILogger& logger)
 {
 	// all has been consumed => tell successors that we are ready
 	for (Successors::iterator it = _successors.begin(); it!=_successors.end(); it++) {
@@ -383,7 +383,7 @@ void CStep::exitActions (ISimEventAcceptor& eventAcceptor, ILogger& logger)
 
 	// if this is the last step in one behaviour, also tell behaviour that we are ready
 	if (_isLast) {
-		_bhvr->lastStepDone(this, eventAcceptor, logger);
+		_bhvr.lastStepDone(this, eventAcceptor, logger);
 	}
 }
 

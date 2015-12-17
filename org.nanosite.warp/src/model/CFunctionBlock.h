@@ -22,6 +22,10 @@ public:
 	CFunctionBlock(string name, unsigned int cpu, unsigned int partition);
 	virtual ~CFunctionBlock();
 
+	int compare(const CFunctionBlock &other) const;
+	bool operator==(const CFunctionBlock &other) const { return compare(other)==0; }
+	bool operator!=(const CFunctionBlock &other) const { return compare(other)!=0; }
+
 	void addBehaviour (CBehaviour* bhvr);
 	CBehaviour* getBehaviour (unsigned int i);
 	const CBehaviour::Vector& getBehaviours() const  { return _behaviours; };

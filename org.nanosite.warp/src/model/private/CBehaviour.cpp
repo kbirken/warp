@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include <algorithm>
+#include <string>
 using namespace std;
 
 #include "model/CBehaviour.h"
@@ -20,7 +21,7 @@ using namespace std;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBehaviour::CBehaviour (CFunctionBlock* fb, string name, int type, int p, bool addToken) :
+CBehaviour::CBehaviour (const CFunctionBlock& fb, string name, int type, int p, bool addToken) :
 	_fb(fb),
 	_name(name),
 	_type(type),
@@ -41,15 +42,26 @@ CBehaviour::~CBehaviour()
 {
 }
 
+int CBehaviour::compare(const CBehaviour &other) const {
+	int fb = _fb.compare(other._fb);
+	if (fb!=0)
+		return fb;
+
+	int name = _name.compare(other._name);
+	if (name!=0)
+		return name;
+
+	return 0;
+}
 
 string CBehaviour::getQualifiedName() const
 {
-	return _fb->getName() + "::" + _name;
+	return _fb.getName() + "::" + _name;
 }
 
 string CBehaviour::getDotId() const
 {
-	return _fb->getDotId() + "_" + _name;
+	return _fb.getDotId() + "_" + _name;
 }
 
 
@@ -278,7 +290,7 @@ void CBehaviour::log (ILogger& logger, int level, CMessage* msg, string action) 
 
 void CBehaviour::print() const
 {
-	printf("Behaviour %s\n", _name.c_str());
+	printf("Behavior %s\n", _name.c_str());
 }
 
 

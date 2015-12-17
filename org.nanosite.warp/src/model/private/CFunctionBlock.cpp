@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 //#include <algorithm>
+#include <string>
 using namespace std;
 
 #include "model/CFunctionBlock.h"
@@ -28,6 +29,15 @@ CFunctionBlock::~CFunctionBlock()
 	for (CBehaviour::Vector::iterator it = _behaviours.begin(); it!=_behaviours.end(); it++) {
 		delete(*it);
 	}
+}
+
+
+int CFunctionBlock::compare(const CFunctionBlock &other) const {
+	int name = _name.compare(other._name);
+	if (name!=0)
+		return name;
+
+	return 0;
 }
 
 
