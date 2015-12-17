@@ -1,21 +1,23 @@
 /*
- * CPoolVector.cpp
+ * PoolSimVector.cpp
  *
  *  Created on: 29.03.2010
  *      Author: kbirken
  */
 
-#include "model/CPoolVector.h"
-#include "model/CPool.h"
+#include "sim/PoolSimVector.h"
+
+#include "sim/PoolSim.h"
 #include "simulation/ILogger.h"
 
+namespace warp {
+namespace sim {
 
-
-CPoolVector::CPoolVector()
+PoolSimVector::PoolSimVector()
 {
 }
 
-CPoolVector::~CPoolVector()
+PoolSimVector::~PoolSimVector()
 {
 	for (Elements::iterator i = _pools.begin(); i!=_pools.end(); i++) {
 		delete(*i);
@@ -23,13 +25,13 @@ CPoolVector::~CPoolVector()
 }
 
 
-void CPoolVector::push_back (CPool* elem)
+void PoolSimVector::push_back (PoolSim* elem)
 {
 	_pools.push_back(elem);
 }
 
 
-void CPoolVector::init (void)
+void PoolSimVector::init (void)
 {
 	for(int i=0; i<_pools.size(); i++) {
 		_pools[i]->init();
@@ -37,7 +39,7 @@ void CPoolVector::init (void)
 }
 
 
-bool CPoolVector::apply (CPoolVector::Values requests, ILogger& logger)
+bool PoolSimVector::apply (PoolSimVector::Values requests, ILogger& logger)
 {
 	if (requests.size() != _pools.size()) {
 		// both vectors need to have same size
@@ -70,4 +72,7 @@ bool CPoolVector::apply (CPoolVector::Values requests, ILogger& logger)
 
 	return true;
 }
+
+} /* namespace sim */
+} /* namespace warp */
 

@@ -13,7 +13,7 @@
 #include "model/CFunctionBlock.h"
 #include "model/CStep.h"
 #include "model/Resource.h"
-#include "model/CPoolVector.h"
+#include "sim/PoolSimVector.h"
 
 namespace warp {
 namespace model {
@@ -30,7 +30,7 @@ public:
 
 	int getNSlots() const  { return _slots.size(); }
 	const Resource::Vector& getResourceSlots() const  { return _slots; }
-	CPoolVector& getPools()  { return _pools; }
+	sim::PoolSimVector& getPools()  { return _pools; }
 
 	// inject initial steps into simulation engine
 	void addInitials (ISimEventAcceptor& eventAcceptor, ILogger& logger);
@@ -51,7 +51,7 @@ private:
 	Resource::Vector _slots;
 
 	// resource pools
-	CPoolVector _pools;
+	sim::PoolSimVector _pools;
 
 	// list of CFunctionBlocks, we are responsible for its memory
 	CFunctionBlock::Vector _fbs;

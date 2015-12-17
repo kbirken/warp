@@ -205,7 +205,7 @@ void CSimulatorCore::stepDone (CStep* step) {
 void CSimulatorCore::run (
 		const model::Resource::Vector& resources,
 		const model::Resource::Vector& resourceInterfaces,
-		CPoolVector& pools,
+		sim::PoolSimVector& pools,
 		bool withLoadfile,
 		string dotFileName)
 {
@@ -305,7 +305,7 @@ void CSimulatorCore::run (
 
 bool CSimulatorCore::iteration (
 	const model::Resource::Vector& resources,
-	CPoolVector& pools,
+	sim::PoolSimVector& pools,
 	Schedulers& scheds,
 	vector<bool> isLimited,
 	FILE* loadfile

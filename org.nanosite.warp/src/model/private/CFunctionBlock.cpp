@@ -11,10 +11,7 @@ using namespace std;
 #include "model/CFunctionBlock.h"
 #include "model/CBehaviour.h"
 
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+namespace warp {
 
 CFunctionBlock::CFunctionBlock (string name, unsigned int cpu, unsigned int partition) :
 	_name(name),
@@ -74,3 +71,5 @@ void CFunctionBlock::print() const
 	printf("FB %s\n", _name.c_str());
 	//printf("%4d %s\n\t\t", _id, getQualifiedName().c_str());
 }
+
+} /* namespace warp */

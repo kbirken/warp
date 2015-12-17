@@ -12,109 +12,114 @@ using namespace std;
 
 #include "simulation/CResourceSlotVector.h"
 #include "simulation/IStepSuccessor.h"
-#include "model/CPoolVector.h"
+#include "sim/PoolSimVector.h"
 
-// forward decl
-class ISimEventAcceptor;
+
+// forward declarations
 class ILogger;
-class CBehaviour;
 
+namespace warp {
 
-class CStep : public IStepSuccessor {
-public:
-	typedef vector<CStep*> Vector;
+	// forward declarations
+	class CBehaviour;
+	class ISimEventAcceptor;
 
-	CStep(int id,
-			/*const*/ CBehaviour& bhvr,
-			string name,
-			int milestone,
-			unsigned int cpu,
-			unsigned int partition,
-			CResourceVector* rv,
-			CResourceVector* averageCST,
-			const CPoolVector::Values& poolRequests);
+	class CStep : public IStepSuccessor {
+	public:
+		typedef vector<CStep*> Vector;
 
-	virtual ~CStep();
+		CStep(int id,
+				/*const*/ CBehaviour& bhvr,
+				string name,
+				int milestone,
+				unsigned int cpu,
+				unsigned int partition,
+				CResourceVector* rv,
+				CResourceVector* averageCST,
+				const sim::PoolSimVector::Values& poolRequests);
 
-	const CBehaviour& getBehaviour (void) const;
-	unsigned int getCPU() const  { return _cpu; }
-	unsigned int getPartition() const  { return _partition; }
+		virtual ~CStep();
 
-	void setIsFirst()  { _isFirst = true; }
-	void setIsLast()  { _isLast = true; }
-	bool isLast() const  { return _isLast; }
+		const CBehaviour& getBehaviour (void) const;
+		unsigned int getCPU() const  { return _cpu; }
+		unsigned int getPartition() const  { return _partition; }
 
-	void addSuccessor (CBehaviour* behaviour);
-	void addSuccessor (CStep* step);
+		void setIsFirst()  { _isFirst = true; }
+		void setIsLast()  { _isLast = true; }
+		bool isLast() const  { return _isLast; }
 
-	const CResourceVector& getCurrentResourceNeeds() const  { return *_resourceNeeds; }
-	//const CResourceVector& getAverageCSTVector() const  { return *_averageCSTVector; }
+		void addSuccessor (CBehaviour* behaviour);
+		void addSuccessor (CStep* step);
 
-	// prepare for next execution
-	void prepareExecution();
+		const CResourceVector& getCurrentResourceNeeds() const  { return *_resourceNeeds; }
+		//const CResourceVector& getAverageCSTVector() const  { return *_averageCSTVector; }
 
-	// triggers (called by predecessor steps)
-	void waitFor (CStep* step);
+		// prepare for next execution
+		void prepareExecution();
 
-	// IStepSuccessor interface
-	void done (const CStep* step, ISimEventAcceptor& acceptor);
+		// triggers (called by predecessor steps)
+		void waitFor (CStep* step);
 
-	bool isWaiting()  { return _waitFor.size()>0; }
+		// IStepSuccessor interface
+		void done (const CStep* step, ISimEventAcceptor& acceptor);
 
-	const CPoolVector::Values& getPoolRequests() const  { return _poolRequests; }
+		bool isWaiting()  { return _waitFor.size()>0; }
 
-	string getQualifiedName() const;
+		const sim::PoolSimVector::Values& getPoolRequests() const  { return _poolRequests; }
 
-	// some helpers for drawing graphviz diagrams
-	void nextDotInstance()  { _dotInstance++; }
-	string getPrevDotId () const;
-	string getDotId (bool next=false) const;
-	string getDotLabel() const;
-	bool isInternalMilestone() const;
-	bool isCustomerMilestone() const;
+		string getQualifiedName() const;
 
-	bool checkSmallestRequests (
-			const vector<int>& nMaxRequests,
-			CResourceVector& mins,
-			int partNReqs, int partSize, int partAllSize,
-			ILogger& logger);
+		// some helpers for drawing graphviz diagrams
+		void nextDotInstance()  { _dotInstance++; }
+		string getPrevDotId () const;
+		string getDotId (bool next=false) const;
+		string getDotLabel() const;
+		bool isInternalMilestone() const;
+		bool isCustomerMilestone() const;
 
-	bool hasResourceNeeds() const;
+		bool checkSmallestRequests (
+				const vector<int>& nMaxRequests,
+				CResourceVector& mins,
+				int partNReqs, int partSize, int partAllSize,
+				ILogger& logger);
 
-	bool consume (int delta,
-			const vector<bool>& isLimited,
-			const vector<int>& nMaxRequests,
-			int partNReqs, int partSize, int partAllSize,
-			ILogger& logger);
+		bool hasResourceNeeds() const;
 
-	void exitActions (ISimEventAcceptor& eventAcceptor, ILogger& logger);
+		bool consume (int delta,
+				const vector<bool>& isLimited,
+				const vector<int>& nMaxRequests,
+				int partNReqs, int partSize, int partAllSize,
+				ILogger& logger);
 
-	void print() const;
-	void printWaitingList() const;
+		void exitActions (ISimEventAcceptor& eventAcceptor, ILogger& logger);
 
-private:
-	int _id;
-	/*const*/ CBehaviour& _bhvr;
-	string _name;
-	int _milestone;
-	unsigned int _cpu;  // same as in this step's functionblock
-	unsigned int _partition;  // same as in this step's functionblock
-	bool _isFirst, _isLast;
-	CResourceVector* _initialResourceNeeds;
-	CResourceVector* _averageCSTVector;
-	CPoolVector::Values _poolRequests;
+		void print() const;
+		void printWaitingList() const;
 
-	typedef vector<IStepSuccessor*> Successors;
-	Successors _successors;
+	private:
+		int _id;
+		/*const*/ CBehaviour& _bhvr;
+		string _name;
+		int _milestone;
+		unsigned int _cpu;  // same as in this step's functionblock
+		unsigned int _partition;  // same as in this step's functionblock
+		bool _isFirst, _isLast;
+		CResourceVector* _initialResourceNeeds;
+		CResourceVector* _averageCSTVector;
+		sim::PoolSimVector::Values _poolRequests;
 
-	CStep* _directPredecessor;
+		typedef vector<IStepSuccessor*> Successors;
+		Successors _successors;
 
-	int _dotInstance;
+		CStep* _directPredecessor;
 
-	// this data is changed when the step is executed
-	CResourceVector* _resourceNeeds;
-	Vector _waitFor;
-};
+		int _dotInstance;
 
+		// this data is changed when the step is executed
+		CResourceVector* _resourceNeeds;
+		Vector _waitFor;
+	};
+
+} /* namespace warp */
 
 #endif // !defined(_STEP_H_INCLUDED_)

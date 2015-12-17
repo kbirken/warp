@@ -5,17 +5,21 @@
  *      Author: kbirken
  */
 
-#ifndef ISTEPSUCCESSOR_H_
-#define ISTEPSUCCESSOR_H_
+#ifndef WARP_ISTEPSUCCESSOR_H_
+#define WARP_ISTEPSUCCESSOR_H_
 
-// forward decls
-class CStep;
-class ISimEventAcceptor;
+namespace warp {
 
-class IStepSuccessor {
-public:
-	virtual void done (const CStep* step, ISimEventAcceptor& acceptor) = 0;
-};
+	// forward decls
+	class CStep;
+	class ISimEventAcceptor;
+
+	class IStepSuccessor {
+	public:
+		virtual void done (const CStep* step, ISimEventAcceptor& acceptor) = 0;
+	};
+
+} /* namespace warp */
 
 
-#endif /* ISTEPSUCCESSOR_H_ */
+#endif /* WARP_ISTEPSUCCESSOR_H_ */

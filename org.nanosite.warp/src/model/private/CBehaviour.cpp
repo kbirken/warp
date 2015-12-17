@@ -2,13 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
-
-#include <algorithm>
-#include <string>
-using namespace std;
-
 #include "model/CBehaviour.h"
+
 #include "model/CFunctionBlock.h"
 #include "model/CStep.h"
 #include "simulation/CToken.h"
@@ -16,10 +11,13 @@ using namespace std;
 #include "simulation/ISimEventAcceptor.h"
 #include "simulation/ILogger.h"
 
+#include <stdio.h>
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+#include <algorithm>
+#include <string>
+using namespace std;
+
+namespace warp {
 
 CBehaviour::CBehaviour (const CFunctionBlock& fb, string name, int type, int p, bool addToken) :
 	_fb(fb),
@@ -293,4 +291,5 @@ void CBehaviour::print() const
 	printf("Behavior %s\n", _name.c_str());
 }
 
+} /* namespace warp */
 

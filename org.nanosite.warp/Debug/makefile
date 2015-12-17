@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/simulation/private/subdir.mk
+-include src/sim/private/subdir.mk
 -include src/model/private/subdir.mk
 -include src/subdir.mk
 -include subdir.mk

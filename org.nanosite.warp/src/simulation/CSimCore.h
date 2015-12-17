@@ -40,7 +40,7 @@ public:
 	void run (
 			const model::Resource::Vector& resources,
 			const model::Resource::Vector& resourceInterfaces,
-			CPoolVector& pools,
+			sim::PoolSimVector& pools,
 			bool withLoadfile,
 			string dotFileName);
 
@@ -59,7 +59,7 @@ private:
 	// progress one iteration during simulation run
 	bool iteration (
 			const model::Resource::Vector& resources,
-			CPoolVector& pools,
+			sim::PoolSimVector& pools,
 			Schedulers& scheds,
 			vector<bool> isLimited,
 			FILE* loadfile);

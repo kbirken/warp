@@ -14,16 +14,13 @@ using namespace std;
 #include "simulation/ILogger.h"
 #include "simulation/CIntAccuracy.h"
 
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+namespace warp {
 
 CStep::CStep (int id, /*const*/ CBehaviour& bhvr, string name,
 		int milestone, unsigned int cpu, unsigned int partition,
 		CResourceVector* rv,
 		CResourceVector* averageCST,
-		const CPoolVector::Values& poolRequests
+		const sim::PoolSimVector::Values& poolRequests
 ) :
 	_id(id),
 	_bhvr(bhvr),
@@ -110,7 +107,8 @@ void CStep::done (const CStep* step, ISimEventAcceptor& eventAcceptor)
 		printf("ERROR in step '%s' at CStep::done('%s'): inconsistent data model\n",
 					getQualifiedName().c_str(),
 					step->getQualifiedName().c_str());
-		exit(1);
+		throw 99;
+//		exit(1);
 	}
 	else {
 		// we are no more waiting for this step, because it is done
@@ -387,3 +385,4 @@ void CStep::exitActions(ISimEventAcceptor& eventAcceptor, ILogger& logger)
 	}
 }
 
+} /* namespace warp */

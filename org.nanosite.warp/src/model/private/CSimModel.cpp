@@ -6,11 +6,14 @@
  */
 
 #include "model/CSimModel.h"
-#include "model/CPool.h"
+
+#include "model/Pool.h"
+#include "model/CBehaviour.h"
+#include "model/CStep.h"
+#include "sim/PoolSim.h"
 #include "simulation/ISimEventAcceptor.h"
 #include "simulation/CTokenFactory.h"
 #include "simulation/CIntAccuracy.h"
-
 
 #include <iostream>
 #include <fstream>
@@ -122,8 +125,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		int maxAmount;
 		in >> poolName >> maxAmount;
 		//printf("Pool %s has maximum amount of %d\n", poolName.c_str(), maxAmount);
-		CPool *pool = new CPool(poolName.c_str(), maxAmount);
-		_pools.push_back(pool);
+		Pool *pool = new Pool(poolName.c_str(), maxAmount);
+		sim::PoolSim *poolSim = new sim::PoolSim(*pool);
+		_pools.push_back(poolSim);
 	}
 
 
@@ -265,7 +269,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		}
 
 		// read alloc/free amounts from pools
-		CPoolVector::Values poolVals;
+		sim::PoolSimVector::Values poolVals;
 		for(int poolId=0; poolId<nPools; poolId++) {
 
 			// will be <0 for free() and >0 for alloc()
