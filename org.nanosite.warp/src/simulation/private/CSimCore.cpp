@@ -211,7 +211,7 @@ void CSimulatorCore::run (
 {
 	int iter=0;
 	//int n=35;
-	int n=9999;
+	int n=19999;
 
 	vector<bool> isLimited;
 	for(unsigned i=0; i<resourceInterfaces.size(); i++) {
