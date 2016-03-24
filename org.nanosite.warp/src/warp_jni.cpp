@@ -36,7 +36,7 @@ public:
 	void addResource(const char* name, vector<int> cst, int scheduling);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
 	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int type);
-	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, long use);
+	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads);
 	void addInitial(warp::CBehavior* bhvr);
 
 	void simulate(const char* dotfile);
@@ -97,15 +97,13 @@ warp::CBehavior* WarpJNI::addBehavior(warp::CFunctionBlock* fb, const char* name
 	return bhvr;
 }
 
-warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, long use) {
-    cout << "WarpJNI::addStep(" << bhvr->getQualifiedName() << ", " << name << ", " << use << ")\n";
-
-    // get CPU where this step is executed
-    int cpu = bhvr->getFunctionBlock().getCPU();
+warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads) {
+    cout << "WarpJNI::addStep(" << bhvr->getQualifiedName() << ", " << name << ")\n";
 
 	// create CStep and corresponding CResourceVector
 	vector<int> values;
 	vector<int> averageCSTs;
+	int loadsIdx = 0;
 	for(int r=0; r<_model.getNResources(); r++) {
 		const shared_ptr<Resource> res = _model.getResources()[r];
 		//printf("  reading resource %d / %s\n", r, res.getName());
@@ -115,7 +113,7 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, long use)
 		int nRIs = res->getNInterfaces();
 		//printf("    n=%d nRIs=%d\n", n, nRIs);
 		for(int ri=0; ri<n; ri++) {
-			int v = (r==cpu) ? use : 0;
+			int v = loads[loadsIdx++];
 
 			rv += v;
 			printf("    ri=%d rv=%d v=%d\n", ri, rv, v);
@@ -219,12 +217,26 @@ JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_Warp_createSimulation(JNIEnv 
     return (jlong)warp;
 }
 
-JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addResource(JNIEnv *env, jobject obj, jlong handle, jstring name, jint scheduling) {
-	const char *str= env->GetStringUTFChars(name, 0);
-
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addCPU(JNIEnv *env, jobject obj, jlong handle, jstring name, jint scheduling) {
 	WarpJNI* warp = (WarpJNI*)handle;
-	vector<int> cst; // TODO: support non-CPU resources
+
+	const char *str= env->GetStringUTFChars(name, 0);
+	vector<int> cst; // not used for CPU resources
 	warp->addResource(str, cst, 0);
+
+    env->ReleaseStringUTFChars(name, str);
+}
+
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addResource(JNIEnv *env, jobject obj, jlong handle, jstring name, jintArray cst) {
+	WarpJNI* warp = (WarpJNI*)handle;
+
+	const char *str= env->GetStringUTFChars(name, 0);
+	int n = env->GetArrayLength(cst);
+	jint* cstArray = env->GetIntArrayElements(cst, 0);
+	vector<int> cstData;
+	for(int i=0; i<n; i++)
+		cstData.push_back(cstArray[i]);
+	warp->addResource(str, cstData, 0);
 
     env->ReleaseStringUTFChars(name, str);
 }
@@ -272,12 +284,17 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_WarpBehavior_setInitial(JNIEnv
 	warp->addInitial(bhvr);
 }
 
-JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addStep(JNIEnv *env, jclass, jlong handle, jlong warpHandle, jstring name, jlong use) {
+JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addStep(JNIEnv *env, jclass, jlong handle, jlong warpHandle, jstring name, jlongArray loads) {
 	warp::CBehavior* bhvr = (warp::CBehavior*)handle;
 	WarpJNI* warp = (WarpJNI*)warpHandle;
 
 	const char *str= env->GetStringUTFChars(name, 0);
-	warp::CStep* step = warp->addStep(bhvr, str, use);
+	int n = env->GetArrayLength(loads);
+	jlong* loadsArray = env->GetLongArrayElements(loads, 0);
+	vector<long> loadsData;
+	for(int i=0; i<n; i++)
+		loadsData.push_back(loadsArray[i]);
+	warp::CStep* step = warp->addStep(bhvr, str, loadsData);
 
     env->ReleaseStringUTFChars(name, str);
     return (jlong)step;

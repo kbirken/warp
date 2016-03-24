@@ -13,8 +13,8 @@ public class WarpBehavior {
 		setInitial(handle, api.getHandle());
 	}
 
-	public WarpStep addStep(String name, long use) {
-		long step = addStep(handle, api.getHandle(), name, use);
+	public WarpStep addStep(String name, long[] loads) {
+		long step = addStep(handle, api.getHandle(), name, loads);
 		return new WarpStep(api, step);
 	}
 	
@@ -23,7 +23,7 @@ public class WarpBehavior {
 	}
 
 	static private native void setInitial(long handle, long simhandle);
-	static private native long addStep(long handle, long simhandle, String name, long use);
+	static private native long addStep(long handle, long simhandle, String name, long[] loads);
 	static private native void addSendTrigger(long handle, long receiverHandle);
 
 }

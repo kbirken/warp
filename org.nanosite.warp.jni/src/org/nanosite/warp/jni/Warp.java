@@ -10,12 +10,22 @@ public class Warp {
 	private native long createSimulation(int verbose);
 	
 	/**
-	 * Add a resource to the simulation model.
+	 * Add a CPU to the simulation model.
 	 * 
 	 * @param simhandle the native object handle 
-	 * @param name
+	 * @param name the name of the CPU
+	 * @param scheduling the type of scheduling
 	 */
-	private native void addResource(long simhandle, String name, int scheduling);
+	private native void addCPU(long simhandle, String name, int scheduling);
+
+	/**
+	 * Add a bandwidth-limited resource to the simulation model.
+	 * 
+	 * @param simhandle the native object handle 
+	 * @param name the name of the resource
+	 * @param cst the array of context switching times for the resource's interfaces
+	 */
+	private native void addResource(long simhandle, String name, int[] cst);
 
 	/**
 	 * Add a function block to the simulation model.
@@ -56,8 +66,12 @@ public class Warp {
 		return simhandle;
 	}
 
-	public void addResource(String name, int scheduling) {
-		addResource(simhandle, name, scheduling);
+	public void addCPU(String name, int scheduling) {
+		addCPU(simhandle, name, scheduling);
+	}
+
+	public void addResource(String name, int[] cst) {
+		addResource(simhandle, name, cst);
 	}
 
 	public WarpFunctionBlock addFunctionBlock(String name, int cpu, int partition) {
