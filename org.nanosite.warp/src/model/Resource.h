@@ -27,6 +27,7 @@ namespace model {
 		} Scheduling;
 
 		Resource(const char* name, bool isLimited);
+		Resource(const char* name, vector<int> cst, Scheduling scheduling);
 		Resource(istream &in);
 		virtual ~Resource();
 

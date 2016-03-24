@@ -23,7 +23,15 @@ public:
 	CSimModel();
 	virtual ~CSimModel();
 
-	bool readFile (const char* modelFilename, bool verbose);
+	bool readFile(const char* modelFilename, bool verbose);
+
+	void init();
+	void addResource(shared_ptr<Resource> res);
+	void phase2();
+	void addFunctionBlock(CFunctionBlock* fb);
+	void addInitial(CBehavior* bhvr);
+	void addStep(CStep* step);
+	void finalize();
 
 	int getNResources() const  { return _resources.size(); }
 	const Resource::Vector& getResources() const  { return _resources; }

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.nanosite.warp.jni.tests
+Bundle-SymbolicName: org.nanosite.warp.jni.tests
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: itemis AG
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.nanosite.warp.jni;bundle-version="0.7.0",
+ org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

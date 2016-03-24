@@ -62,6 +62,9 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		return false;
 	}
 
+	// do basic initialization
+	init();
+
 	// read list of resources
 	int nRes;
 	in >> nRes;
@@ -71,12 +74,6 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 	}
 
 	printf("input file version %d - reading %d resources...\n", version, nRes);
-
-	// add artificial resource for "wait time"
-	// (this resource can be used unlimited)
-	shared_ptr<Resource> res(new Resource("wait", false));
-	_resources.push_back(res);
-	_slots.push_back(res);
 
 	// add remaining resources
 	for(int i=0; i<nRes; i++) {
@@ -88,19 +85,10 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 
 		// NB: cpu id as given for each FunctionBlock later in file must be identical to index in _resources vector
 		shared_ptr<Resource> res(new Resource(in));
-		_resources.push_back(res);
-
-		// add slot(s) for this resource
-		int n = res->getNSlots();
-		for(int j=0; j<n; j++) {
-			_slots.push_back(res);
-		}
+		addResource(res);
 	}
 
-	// TODO: this global setting is dangerous and should be replaced
-	CResourceVector::setNResources(getNResources());
-	//printf("nResources=%d\n", getNResources());
-
+	phase2();
 
 	// read list of pools
 	int nPools;
@@ -228,18 +216,23 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		vector<int> averageCSTs;
 		for(int r=0; r<getNResources(); r++) {
 			const Resource& res = *(_resources[r]);
+			//printf("  reading resource %d / %s\n", r, res.getName());
 
 			int rv=0, cst=0;
 			int n = res.getNSlots();
 			int nRIs = res.getNInterfaces();
+			//printf("    n=%d nRIs=%d\n", n, nRIs);
 			for(int ri=0; ri<n; ri++) {
 				int v;
 				in >> v;
 
 				rv += v;
+				//printf("    ri=%d rv=%d v=%d\n", ri, rv, v);
 				if (nRIs>0) {
 					int cstRI = v * res.getCST(ri);
+					//printf("     res.getCST(ri)=%d cstRI=%d\n", res.getCST(ri), cstRI);
 					cst += cstRI;
+					//printf("     cst=%d\n", cst);
 					/*
 					if (cst>0) {
 						printf("  r=%d ri=%d n=%d v=%d rv=%d getCST=%d cst=%d\n",
@@ -428,10 +421,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		}
 	} while (id>=0);
 
-	// prepare all FunctionBlocks for this execution
-	for(unsigned int i=0; i<_fbs.size(); i++) {
-		_fbs[i]->prepareExecution();
-	}
+	finalize();
 
 	return true;
 }
@@ -451,7 +441,55 @@ void CSimModel::addInitials (ISimEventAcceptor& eventAcceptor, ILogger& logger)
 
 // ***********************************************************************
 
-int CSimModel::checkRemnants (void) const
+void CSimModel::init() {
+	// add artificial resource for "wait time"
+	// (this resource can be used unlimited)
+	shared_ptr<Resource> res(new Resource("wait", false));
+	_resources.push_back(res);
+	_slots.push_back(res);
+}
+
+void CSimModel::addResource(shared_ptr<Resource> res) {
+	// add to resources list
+	_resources.push_back(res);
+
+	// add slot(s) for this resource
+	int n = res->getNSlots();
+	for(int j=0; j<n; j++) {
+		_slots.push_back(res);
+	}
+}
+
+void CSimModel::phase2() {
+	// TODO: this global setting is dangerous and should be replaced
+	CResourceVector::setNResources(getNResources());
+	printf("nResources=%d\n", getNResources());
+}
+
+void CSimModel::addFunctionBlock(CFunctionBlock* fb) {
+	// add to list of function blocks
+	_fbs.push_back(fb);
+}
+
+void CSimModel::addInitial(CBehavior* bhvr) {
+	_initials.push_back(bhvr);
+}
+
+void CSimModel::addStep(CStep* step) {
+	// add to list of steps
+	_steps.push_back(step);
+}
+
+void CSimModel::finalize() {
+	// prepare all FunctionBlocks for this execution
+	for(unsigned int i=0; i<_fbs.size(); i++) {
+		_fbs[i]->prepareExecution();
+	}
+}
+
+// ***********************************************************************
+
+int CSimModel::checkRemnants() const
 {
 	int nRemnants = 0;
 	for (CFunctionBlock::Vector::const_iterator it = _fbs.begin(); it!=_fbs.end(); it++) {

@@ -32,7 +32,7 @@ CPP_DEPS += \
 src/model/private/%.o: ../src/model/private/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cygwin C++ Compiler'
-	g++ -I"../src" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	g++ -I"../src" -I"../src-gen" -I"/Library/Java/JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include" -I"/Library/Java/JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include/darwin" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

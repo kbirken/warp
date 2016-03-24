@@ -15,6 +15,7 @@ using namespace std;
 #include "simulation/ISimEventAcceptor.h"
 #include "simulation/ILogger.h"
 #include "simulation/CResourceSlotVector.h"
+#include "simulation/CIntAccuracy.h"
 #include "model/Resource.h"
 #include "model/CStep.h"
 
@@ -53,6 +54,18 @@ public:
 	void log (const char* action, const char* fmt, ...);
 	int verbose() const  { return _verbose; }
 
+	long getTimeReady(CStep* step) {
+		return CIntAccuracy::toPrint(_readyMap[step]);
+	}
+
+	long getTimeRunning(CStep* step) {
+		return CIntAccuracy::toPrint(_runningMap[step]);
+	}
+
+	long getTimeDone(CStep* step) {
+		return CIntAccuracy::toPrint(_doneMap[step]);
+	}
+
 private:
 	typedef map<unsigned int, CAPSScheduler*> Schedulers;
 
@@ -87,9 +100,12 @@ private:
 	typedef map<int,CStep::Vector> PhaseMap;
 	static const int PHASE_LEN_MS = 1000;
 	PhaseMap _phases;
+
+	// timing results (per model step)
 	typedef map<CStep*,int> TimeMap;
 	TimeMap _readyMap;
 	TimeMap _runningMap;
+	TimeMap _doneMap;
 };
 
 } /* namespace warp */

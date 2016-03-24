@@ -198,6 +198,7 @@ void CSimulatorCore::stepDone (CStep* step) {
 	step->exitActions(*this, *this);
 	log("DONE", "%s\n", step->getQualifiedName().c_str());
 	drawNode(step);
+	_doneMap[step] = _time;
 }
 
 

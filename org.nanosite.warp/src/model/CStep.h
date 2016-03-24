@@ -61,7 +61,7 @@ namespace warp {
 		void waitFor (CStep* step);
 
 		// IStepSuccessor interface
-		void done (const CStep* step, ISimEventAcceptor& acceptor);
+		void done(const CStep* step, ISimEventAcceptor& acceptor);
 
 		bool isWaiting()  { return _waitFor.size()>0; }
 
@@ -71,13 +71,13 @@ namespace warp {
 
 		// some helpers for drawing graphviz diagrams
 		void nextDotInstance()  { _dotInstance++; }
-		string getPrevDotId () const;
-		string getDotId (bool next=false) const;
+		string getPrevDotId() const;
+		string getDotId(bool next=false) const;
 		string getDotLabel() const;
 		bool isInternalMilestone() const;
 		bool isCustomerMilestone() const;
 
-		bool checkSmallestRequests (
+		bool checkSmallestRequests(
 				const vector<int>& nMaxRequests,
 				CResourceVector& mins,
 				int partNReqs, int partSize, int partAllSize,
@@ -85,13 +85,13 @@ namespace warp {
 
 		bool hasResourceNeeds() const;
 
-		bool consume (int delta,
+		bool consume(int delta,
 				const vector<bool>& isLimited,
 				const vector<int>& nMaxRequests,
 				int partNReqs, int partSize, int partAllSize,
 				ILogger& logger);
 
-		void exitActions (ISimEventAcceptor& eventAcceptor, ILogger& logger);
+		void exitActions(ISimEventAcceptor& eventAcceptor, ILogger& logger);
 
 		void print() const;
 		void printWaitingList() const;

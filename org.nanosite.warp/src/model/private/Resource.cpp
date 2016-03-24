@@ -10,12 +10,27 @@
 namespace warp {
 namespace model {
 
-Resource::Resource (const char* name, bool isLimited) :
+Resource::Resource(const char* name, bool isLimited) :
 	_name(name),
 	_isLimited(isLimited),
 	_scheduling(SCHED_PLAIN),
 	_wholeSize(0)
 {
+}
+
+Resource::Resource(const char* name, vector<int> cst, Scheduling scheduling) :
+	_name(name),
+	_isLimited(true),
+	_scheduling(scheduling),
+	_wholeSize(0)
+{
+	// for cpus, nIfs will be 0
+	// read list of context switching times (one for each resource interface)
+	for(int ri=0; ri<cst.size(); ri++) {
+		_contextSwitchingTimes.push_back(cst[ri]);
+	}
+
+	// TODO: handle additional configuration for scheduding!=SCHED_PLAIN (see constructor below)
 }
 
 
@@ -67,7 +82,6 @@ Resource::Resource (istream &in) :
 		}
 	}
 }
-
 
 Resource::~Resource()
 {

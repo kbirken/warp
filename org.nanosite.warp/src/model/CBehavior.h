@@ -42,6 +42,8 @@ namespace warp {
 		string getQualifiedName() const;
 		string getDotId() const;
 
+		const CFunctionBlock& getFunctionBlock() const { return _fb; }
+
 		void addStep (CStep* step);
 		void addSendTrigger (CBehavior* bhvr);
 		void setUnlessCondition (CStep* step);
