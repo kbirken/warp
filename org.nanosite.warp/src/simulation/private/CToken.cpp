@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 //#include <algorithm>
-using namespace std;
+//using namespace std;
 
 #include "simulation/CToken.h"
 
@@ -16,8 +16,8 @@ using namespace std;
 
 CToken::CToken (Id id, string info, CToken* parent) :
 	_id(id),
-	_info(info),
 	_parent(parent),
+	_info(info),
 	_referrers(0)
 {
 	if (_parent) {

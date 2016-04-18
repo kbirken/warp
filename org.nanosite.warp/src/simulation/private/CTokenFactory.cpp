@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 //#include <algorithm>
-using namespace std;
+//using namespace std;
 
 #include "simulation/CTokenFactory.h"
 #include "simulation/CToken.h"
@@ -21,8 +21,8 @@ CTokenFactory* CTokenFactory::_instance = 0;
 //////////////////////////////////////////////////////////////////////
 
 CTokenFactory::CTokenFactory () :
-	_next_id(1),
-	_printInfos(false)
+	_printInfos(false),
+	_next_id(1)
 {
 }
 

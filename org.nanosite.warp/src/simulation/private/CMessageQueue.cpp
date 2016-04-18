@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 //#include <algorithm>
-using namespace std;
+//using namespace std;
 
 #include "simulation/CMessageQueue.h"
 #include "simulation/CMessage.h"
@@ -48,6 +48,6 @@ CMessage* CMessageQueue::pop (void)
 
 void CMessageQueue::print() const
 {
-	printf("MessageQueue %08x size=%d\n", (void*)this, _queue.size());
+	printf("MessageQueue %p size=%ld\n", (void*)this, _queue.size());
 	//printf("%4d %s\n\t\t", _id, getQualifiedName().c_str());
 }

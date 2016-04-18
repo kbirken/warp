@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 //#include <algorithm>
-using namespace std;
+//using namespace std;
 
 #include "simulation/CMessage.h"
 #include "simulation/CToken.h"
