@@ -4,16 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/warp.cpp \
-../src/warp_jni.cpp 
+../src/warp.cpp 
 
 OBJS += \
-./src/warp.o \
-./src/warp_jni.o 
+./src/warp.o 
 
 CPP_DEPS += \
-./src/warp.d \
-./src/warp_jni.d 
+./src/warp.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
