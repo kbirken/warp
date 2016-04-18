@@ -41,6 +41,9 @@ public:
 
 	void simulate(const char* dotfile);
 
+	int getNIterations();
+	int getNRemnants();
+
 	warp::CSimulatorCore* getSimulator() {
 		return _simulator;
 	}
@@ -71,13 +74,13 @@ WarpJNI::~WarpJNI() {
 }
 
 void WarpJNI::addResource(const char* name, vector<int> cst, int scheduling) {
-    cout << "WarpJNI::addResource(" << name << ")\n";
+//    cout << "WarpJNI::addResource(" << name << ")\n";
     shared_ptr<Resource> res(new Resource(name, cst, (Resource::Scheduling)scheduling));
     _model.addResource(res);
 }
 
 warp::CFunctionBlock* WarpJNI::addFunctionBlock(const char* name, int cpu, int partition) {
-    cout << "WarpJNI::addFunctionBlock(" << name << ", " << cpu << ")\n";
+//    cout << "WarpJNI::addFunctionBlock(" << name << ", " << cpu << ")\n";
 
     if (!_phase2started) {
     	_phase2started = true;
@@ -91,14 +94,14 @@ warp::CFunctionBlock* WarpJNI::addFunctionBlock(const char* name, int cpu, int p
 }
 
 warp::CBehavior* WarpJNI::addBehavior(warp::CFunctionBlock* fb, const char* name, int type) {
-    cout << "WarpJNI::addBehavior(" << fb->getName() << "::" << name << ", " << type << ")\n";
+//    cout << "WarpJNI::addBehavior(" << fb->getName() << "::" << name << ", " << type << ")\n";
 	warp::CBehavior* bhvr = new warp::CBehavior(*fb, name, type, 0, false);
 	fb->addBehavior(bhvr);
 	return bhvr;
 }
 
 warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads) {
-    cout << "WarpJNI::addStep(" << bhvr->getQualifiedName() << ", " << name << ")\n";
+//    cout << "WarpJNI::addStep(" << bhvr->getQualifiedName() << ", " << name << ")\n";
 
 	// create CStep and corresponding CResourceVector
 	vector<int> values;
@@ -116,16 +119,16 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<lo
 			int v = loads[loadsIdx++];
 
 			rv += v;
-			printf("    ri=%d rv=%d v=%d\n", ri, rv, v);
+//			printf("    ri=%d rv=%d v=%d\n", ri, rv, v);
 			if (nRIs>0) {
 				int cstRI = v * res->getCST(ri);
-				printf("     res.getCST(ri)=%d cstRI=%d\n", res->getCST(ri), cstRI);
+//				printf("     res.getCST(ri)=%d cstRI=%d\n", res->getCST(ri), cstRI);
 				cst += cstRI;
-				printf("     cst=%d\n", cst);
-				if (cst>0) {
-					printf("  r=%d ri=%d n=%d v=%d rv=%d getCST=%d cst=%d\n",
-							r, ri, n, v, rv, res->getCST(ri), cst);
-				}
+//				printf("     cst=%d\n", cst);
+//				if (cst>0) {
+//					printf("  r=%d ri=%d n=%d v=%d rv=%d getCST=%d cst=%d\n",
+//							r, ri, n, v, rv, res->getCST(ri), cst);
+//				}
 				// check for overflow
 				if (cstRI<0 || cst<0) {
 					cerr << "overflow error while computing average CST";
@@ -211,6 +214,14 @@ void WarpJNI::simulate(const char* dotfile) {
 	}
 }
 
+int WarpJNI::getNIterations() {
+	return _simulator!=NULL ? _simulator->getNIterations() : 0;
+}
+
+int WarpJNI::getNRemnants() {
+	return _model.checkRemnants();
+}
+
 
 JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_Warp_createSimulation(JNIEnv * env, jobject obj, jint verbose) {
     WarpJNI* warp = new WarpJNI(verbose);
@@ -259,6 +270,17 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_simulate(JNIEnv *env, job
 	warp->simulate(dotfileStr);
 
 	env->ReleaseStringUTFChars(dotfile, dotfileStr);
+}
+
+
+JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_Warp_getNIterations(JNIEnv *, jobject, jlong handle) {
+	WarpJNI* warp = (WarpJNI*)handle;
+	return warp->getNIterations();
+}
+
+JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_Warp_getNRemainingBehaviors(JNIEnv *, jobject, jlong handle) {
+	WarpJNI* warp = (WarpJNI*)handle;
+	return warp->getNRemnants();
 }
 
 

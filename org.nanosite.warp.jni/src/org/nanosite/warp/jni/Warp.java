@@ -45,6 +45,24 @@ public class Warp {
 	 */
 	private native void simulate(long simhandle, String dotfile);
 
+	/**
+	 * Get number of iterations of last simulation.
+	 * 
+	 * @param simhandle the native object handle 
+	 * @return number of iterations.
+	 */
+	private native int getNIterations(long simhandle);
+
+	/**
+	 * Get number of remaining behaviors of last simulation.</p>
+	 * 
+	 * This should be zero if the simulation was successful.
+	 * 
+	 * @param simhandle the native object handle 
+	 * @return number of behaviors which have not been executed completely at least once.
+	 */
+	private native int getNRemainingBehaviors(long simhandle);
+	
 
 	final private long simhandle;
 	
@@ -82,4 +100,13 @@ public class Warp {
 	public void simulate(String dotfile) {
 		simulate(simhandle, dotfile);
 	}
+	
+	public int getNIterations() {
+		return getNIterations(simhandle);
+	}
+	
+	public int getNRemainingBehaviors() {
+		return getNRemainingBehaviors(simhandle);
+	}
+	
 }

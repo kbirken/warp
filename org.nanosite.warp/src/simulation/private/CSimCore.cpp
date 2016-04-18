@@ -24,6 +24,7 @@ CSimulatorCore::CSimulatorCore (int verbose) :
 	_verbose(verbose),
 	_healthy(true),
 	_time(0),
+	_iteration(0),
 	_timeDiscrete(0),
 	_timeslotDiscrete(0),
 	_dotfile(0)
@@ -210,7 +211,7 @@ void CSimulatorCore::run (
 		bool withLoadfile,
 		string dotFileName)
 {
-	int iter=0;
+	_iteration=0;
 	//int n=35;
 	int n=19999;
 
@@ -254,19 +255,19 @@ void CSimulatorCore::run (
 	// iterate through time
 	_healthy = true;
 	pools.init();
-	while (_healthy && iter<=n && (_ready.size()>0 || _running.size()>0)) {
+	while (_healthy && _iteration<=n && (_ready.size()>0 || _running.size()>0)) {
 		if (_verbose>0) {
-			log("INFO", "ITER %5d   (ready=%d  running=%d)\n", iter, _ready.size(), _running.size());
+			log("INFO", "ITER %5d   (ready=%d  running=%d)\n", _iteration, _ready.size(), _running.size());
 		}
 		bool ok = iteration(resources, pools, scheds, isLimited, loadfile);
 		if (!ok) {
 			// error message is printed inside iteration()
 			return;
 		}
-		iter++;
+		_iteration++;
 	}
 
-	if (iter>=n) {
+	if (_iteration >= n) {
 		log("INFO", "simulation ended due to max number of iterations (max=%d)\n", n);
 	}
 

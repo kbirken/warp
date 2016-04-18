@@ -66,6 +66,10 @@ public:
 		return CIntAccuracy::toPrint(_doneMap[step]);
 	}
 
+	int getNIterations() {
+		return _iteration;
+	}
+
 private:
 	typedef map<unsigned int, CAPSScheduler*> Schedulers;
 
@@ -90,6 +94,8 @@ private:
 
 	bool _healthy;
 	int _time;
+
+	int _iteration;
 
 	static int _timeWindowDiscrete;
 	int _timeDiscrete;
