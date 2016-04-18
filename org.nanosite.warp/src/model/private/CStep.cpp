@@ -107,7 +107,7 @@ void CStep::done (const CStep* step, ISimEventAcceptor& eventAcceptor)
 		printf("ERROR in step '%s' at CStep::done('%s'): inconsistent data model\n",
 					getQualifiedName().c_str(),
 					step->getQualifiedName().c_str());
-		throw 99;
+//		throw 99;
 //		exit(1);
 	}
 	else {
