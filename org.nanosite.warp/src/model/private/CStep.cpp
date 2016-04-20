@@ -47,6 +47,9 @@ CStep::~CStep()
 	delete(_averageCSTVector);
 }
 
+int CStep::getID() const {
+	return _id;
+}
 
 void CStep::addSuccessor (CBehavior* behavior)
 {

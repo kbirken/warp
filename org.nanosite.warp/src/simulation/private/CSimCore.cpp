@@ -4,11 +4,14 @@
 
 #include <stdio.h>
 #include <limits.h>
-#include <model/CBehavior.h>
+
+#include "model/CBehavior.h"
 
 #include "simulation/CSimCore.h"
 #include "simulation/CAPSScheduler.h"
 #include "simulation/CIntAccuracy.h"
+
+#include "result/CIterationResult.h"
 
 namespace warp {
 
@@ -220,6 +223,9 @@ void CSimulatorCore::run (
 		isLimited.push_back(resourceInterfaces[i]->isLimited());
 	}
 
+	// prepare detailed results
+	_results.clear();
+
 	// prepare loadfile and print headline
 	FILE* loadfile = 0;
 	if (withLoadfile) {
@@ -302,6 +308,13 @@ void CSimulatorCore::run (
 	if (loadfile) {
 		fclose(loadfile);
 	}
+
+	// dump detailed results (for debugging only)
+	//_results.dump();
+}
+
+bool CSimulatorCore::writeDetailedResults(const char* filename) {
+	return _results.writeToFile(filename);
 }
 
 
@@ -345,7 +358,9 @@ bool CSimulatorCore::iteration (
 	// compute sum of requests of all 'running' steps for each ResourceSlot (absolute value and count)
 	CResourceVector sums;
 	vector<int> nRequests;
+	vector<vector<int> > stepsPerResource;
 	nRequests.resize(sums.size());
+	stepsPerResource.resize(sums.size());
 	for (CStep::Vector::const_iterator it = _running.begin(); it!=_running.end(); it++) {
 		for(unsigned i=0; i<sums.size(); i++) {
 			CStep* step = *it;
@@ -353,6 +368,7 @@ bool CSimulatorCore::iteration (
 			if (rn > 0) {
 				sums[i] += rn;
 				nRequests[i]++;
+				stepsPerResource[i].push_back(step->getID());
 			}
 		}
 	}
@@ -443,6 +459,14 @@ bool CSimulatorCore::iteration (
 		printf("\n");
 	}
 
+	// record detailed results
+	int tDelta = CIntAccuracy::toPrint(overallMinDelta);
+	result::CIterationResult* result = new result::CIterationResult(tDelta);
+	_results.add(result);
+	for(unsigned r=0; r<nRequests.size(); r++) {
+		result->addResourceUsage(resources[r], stepsPerResource[r]);
+	}
+
 	// output to loadfile
 	int dt = CIntAccuracy::toCalc(_timeWindowDiscrete);
 	if (loadfile) {
@@ -487,7 +511,7 @@ bool CSimulatorCore::iteration (
 				loads += string(" ") + string(txt);
 			}
 		}
-		log("INFO", "DELTA=%d %s\n", CIntAccuracy::toPrint(overallMinDelta), loads.c_str());
+		log("INFO", "DELTA=%d %s\n", tDelta, loads.c_str());
 	}
 
 	// overflow check

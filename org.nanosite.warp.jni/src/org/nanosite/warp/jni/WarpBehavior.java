@@ -14,8 +14,10 @@ public class WarpBehavior {
 	}
 
 	public WarpStep addStep(String name, long[] loads) {
-		long step = addStep(handle, api.getHandle(), name, loads);
-		return new WarpStep(api, step);
+		long stepHandle = addStep(handle, api.getHandle(), name, loads);
+		WarpStep step = new WarpStep(api, stepHandle);
+		api.getSteps().addStep(step);
+		return step;
 	}
 	
 	public void addSendTrigger(WarpBehavior receiver) {

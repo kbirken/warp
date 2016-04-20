@@ -1,5 +1,7 @@
 package org.nanosite.warp.jni;
 
+import org.nanosite.warp.jni.results.SimulationResult;
+
 public class Warp {
 
 	/**
@@ -46,6 +48,13 @@ public class Warp {
 	private native void simulate(long simhandle, String dotfile);
 
 	/**
+	 * Write detail result file.
+	 * 
+	 * @param simhandle the native object handle 
+	 */
+	private native void writeResultFile(long simhandle, String outfile);
+
+	/**
 	 * Get number of iterations of last simulation.
 	 * 
 	 * @param simhandle the native object handle 
@@ -76,14 +85,23 @@ public class Warp {
 		System.loadLibrary("warp_jni");
 	}
 	
+	private StepDirectory steps = new StepDirectory();
+	
 	public Warp(int verbose) {
 		simhandle = createSimulation(verbose);
+
+		// reset global id counter for WarpStep objects
+		WarpStep.reset();
 	}
 	
 	public long getHandle() {
 		return simhandle;
 	}
 
+	public StepDirectory getSteps() {
+		return this.steps;
+	}
+	
 	public void addCPU(String name, int scheduling) {
 		addCPU(simhandle, name, scheduling);
 	}
@@ -109,4 +127,10 @@ public class Warp {
 		return getNRemainingBehaviors(simhandle);
 	}
 	
+	public SimulationResult getSimResult(String tempfile) {
+		writeResultFile(simhandle, tempfile);
+		SimulationResult res = new SimulationResult();
+		res.readFromFile(tempfile, steps);
+		return res;
+	}
 }

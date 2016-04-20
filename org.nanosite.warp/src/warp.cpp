@@ -16,7 +16,7 @@ using namespace std;
 
 static void printUsage (void)
 {
-	fprintf(stderr, "USAGE: warp.exe [-v <verbose_level>] [-g <dot_file>] <warp_file>\n");
+	fprintf(stderr, "USAGE: warp.exe [-v <verbose_level>] [-g <dot_file>] [-r <result_file>] <warp_file>\n");
 }
 
 
@@ -28,18 +28,22 @@ int main(int argc, char* argv[])
 	int verbose = 0;
 	string dotFile = "";
 	string warpFile = "";
+	string resultFile = "";
 
 	int c;
 	int errflg = 0;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "v:g:")) != -1) {
+	while ((c = getopt(argc, argv, "v:g:r:")) != -1) {
 		switch (c) {
 		case 'v':
 			verbose = atoi(optarg);
 			break;
 		case 'g':
 			dotFile = optarg;
+			break;
+		case 'r':
+			resultFile = optarg;
 			break;
 		case '?':
 			fprintf(stderr, "unknown option -%c!\n", optopt);
@@ -104,6 +108,11 @@ int main(int argc, char* argv[])
 				model.getPools(),
 				withLoadfile,
 				dotFile);
+
+		// optionally write results file
+		if (! resultFile.empty()) {
+			core.writeDetailedResults(resultFile.c_str());
+		}
 	}
 
 	mon.done("simulate");

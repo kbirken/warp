@@ -5,7 +5,7 @@
  *      Author: kbirken
  */
 
-#include <model/CBehavior.h>
+#include "model/CBehavior.h"
 #include "model/CSimModel.h"
 
 #include "model/Pool.h"

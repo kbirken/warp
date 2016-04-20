@@ -8,6 +8,7 @@
  */
 
 #include <jni.h>
+#include <unistd.h> // for getcwd()
 
 #include <iostream>
 
@@ -40,6 +41,7 @@ public:
 	void addInitial(warp::CBehavior* bhvr);
 
 	void simulate(const char* dotfile);
+	void writeResultFile(const char* outfile);
 
 	int getNIterations();
 	int getNRemnants();
@@ -50,6 +52,7 @@ public:
 
 private:
 	int _verbose;
+	int _stepId;
 	bool _phase2started;
 	CSimModel _model;
 
@@ -61,6 +64,7 @@ private:
 
 WarpJNI::WarpJNI(int verbose) :
 	_verbose(verbose),
+	_stepId(0),
 	_phase2started(false),
 	_bhvrLast(NULL),
 	_previousStep(NULL),
@@ -150,7 +154,7 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<lo
 	warp::sim::PoolSimVector::Values poolVals; // TODO
 	const warp::CFunctionBlock& fb = bhvr->getFunctionBlock();
 	warp::CStep* step =
-			new warp::CStep(1, *bhvr, name, 0, fb.getCPU(), fb.getPartition(),
+			new warp::CStep(_stepId++, *bhvr, name, 0, fb.getCPU(), fb.getPartition(),
 					new CResourceVector(values),
 					new CResourceVector(averageCSTs),
 					poolVals
@@ -214,6 +218,18 @@ void WarpJNI::simulate(const char* dotfile) {
 	}
 }
 
+void WarpJNI::writeResultFile(const char* outfile) {
+	const int CWDMAX = 256;
+	char cwd[CWDMAX];
+	getcwd(cwd, CWDMAX-1);
+	cout << "CWD: " << cwd << "\n";
+
+	if (_simulator!=NULL) {
+		cout << "WarpJNI::simulate: Writing result file " << outfile << ".\n";
+		_simulator->writeDetailedResults(outfile);
+	}
+}
+
 int WarpJNI::getNIterations() {
 	return _simulator!=NULL ? _simulator->getNIterations() : 0;
 }
@@ -270,6 +286,15 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_simulate(JNIEnv *env, job
 	warp->simulate(dotfileStr);
 
 	env->ReleaseStringUTFChars(dotfile, dotfileStr);
+}
+
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_writeResultFile(JNIEnv *env, jobject obj, jlong handle, jstring resultfile) {
+	const char *resultfileStr = env->GetStringUTFChars(resultfile, 0);
+
+	WarpJNI* warp = (WarpJNI*)handle;
+	warp->writeResultFile(resultfileStr);
+
+	env->ReleaseStringUTFChars(resultfile, resultfileStr);
 }
 
 

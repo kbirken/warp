@@ -18,6 +18,7 @@ using namespace std;
 #include "simulation/CIntAccuracy.h"
 #include "model/Resource.h"
 #include "model/CStep.h"
+#include "result/CSimulationResult.h"
 
 namespace warp {
 
@@ -70,6 +71,9 @@ public:
 		return _iteration;
 	}
 
+	// write detailed simulation results to file
+	bool writeDetailedResults(const char* filename);
+
 private:
 	typedef map<unsigned int, CAPSScheduler*> Schedulers;
 
@@ -112,6 +116,9 @@ private:
 	TimeMap _readyMap;
 	TimeMap _runningMap;
 	TimeMap _doneMap;
+
+	// detailed simulation results
+	result::CSimulationResult _results;
 };
 
 } /* namespace warp */

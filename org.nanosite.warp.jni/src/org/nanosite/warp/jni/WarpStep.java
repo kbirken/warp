@@ -3,10 +3,22 @@ package org.nanosite.warp.jni;
 public class WarpStep {
 	final private Warp api;
 	final private long handle;
+	final private int id;
+	
+	private static int nextId = 0;
+	
+	public static void reset() {
+		nextId = 0;
+	}
 	
 	public WarpStep(Warp api, long handle) {
 		this.api = api;
 		this.handle = handle;
+		this.id = nextId++;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public void addPrecondition(WarpStep precondition) {

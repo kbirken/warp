@@ -40,6 +40,8 @@ namespace warp {
 
 		virtual ~CStep();
 
+		int getID() const;
+
 		const CBehavior& getBehavior (void) const;
 		unsigned int getCPU() const  { return _cpu; }
 		unsigned int getPartition() const  { return _partition; }
