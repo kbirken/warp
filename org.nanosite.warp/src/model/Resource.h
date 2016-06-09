@@ -8,6 +8,7 @@
 #ifndef WARP_MODEL_RESOURCE_H_
 #define WARP_MODEL_RESOURCE_H_
 
+#include <memory>
 #include <iostream>
 #include <string>
 #include <vector>
