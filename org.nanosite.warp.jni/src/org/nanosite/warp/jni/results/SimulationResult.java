@@ -121,11 +121,9 @@ public class SimulationResult {
 				for(String rl : resourceLoads) {
 					List<WarpStep> stepsUsing = new ArrayList<WarpStep>();
 					String steps[] = rl.trim().split(" ");
-					System.out.println("resource loads: " + rl + " => " + steps.length);
 					for(String s : steps) {
 						if (! s.trim().isEmpty()) {
 							int stepId = Integer.valueOf(s.trim());
-							System.out.println("   s=" + s + " id=" + stepId);
 							WarpStep step = stepDirectory.getStep(stepId);
 							if (step==null) {
 								System.err.println("ERROR: Cannot find WarpStep with id " + stepId + "!");
