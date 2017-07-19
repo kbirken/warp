@@ -37,6 +37,15 @@ public class WarpStep {
 		return getDone(handle, api.getHandle());
 	}
 
+	/**
+	 * Get internal handle for this step.</p>
+	 * 
+	 *  This method should be used only internally (e.g., by WarpBehavior).
+	 */
+	public long getHandle() {
+		return handle;
+	}
+	
 	static private native void addPrecondition(long handle, long preconditionStepHandle);
 	static private native long getReady(long handle, long simhandle);
 	static private native long getRunning(long handle, long simhandle);

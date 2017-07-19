@@ -34,7 +34,6 @@ public class Warp {
 	 * 
 	 * @param simhandle the native object handle 
 	 * @param name the name of the function block
-
 	 * @return a handle for the native function block object
 	 */
 	private native long addFunctionBlock(long simhandle, String name, int cpu, int partition);

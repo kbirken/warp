@@ -1,10 +1,6 @@
 package org.nanosite.warp.jni.tests;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.nanosite.warp.jni.Warp;
 import org.nanosite.warp.jni.WarpBehavior;
 import org.nanosite.warp.jni.WarpFunctionBlock;
 import org.nanosite.warp.jni.WarpStep;
@@ -14,7 +10,7 @@ public class SingleCPUWaitTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testSingleBehaviorWaiting() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addWaitStep(bhvr1, "s1", 2000, 0);
 		bhvr1.setInitial();
 	
@@ -26,7 +22,7 @@ public class SingleCPUWaitTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testSingleBehaviorWaitLoad1() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		
 		// CPU load << wait time: wait time dominates
 		WarpStep s1 = addWaitStep(bhvr1, "s1", 2000, 100);
@@ -40,7 +36,7 @@ public class SingleCPUWaitTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testSingleBehaviorWaitLoad2() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		
 		// CPU load == wait time: wait time can be accomplished while computing
 		WarpStep s1 = addWaitStep(bhvr1, "s1", 2000, 2000);
@@ -54,13 +50,13 @@ public class SingleCPUWaitTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testTwoBehaviorsParallelWait1() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		
 		// s1 gets only 50% CPU, therefore 1 sec wait time is not enough for completing this step
 		WarpStep s1 = addWaitStep(bhvr1, "s1", 1000, 800);
 		bhvr1.setInitial();
 
-		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0);
+		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0, 0);
 		WarpStep s5 = addStep(bhvr2, "s5", 2000);
 		bhvr2.setInitial();
 		
@@ -73,13 +69,13 @@ public class SingleCPUWaitTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testTwoBehaviorsParallelWait2() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		
 		// although s1 only gets 50% CPU, 1 sec wait time is enough for completing this step
 		WarpStep s1 = addWaitStep(bhvr1, "s1", 1000, 200);
 		bhvr1.setInitial();
 
-		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0);
+		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0, 0);
 		WarpStep s5 = addStep(bhvr2, "s5", 2000);
 		bhvr2.setInitial();
 		

@@ -36,7 +36,7 @@ public:
 
 	void addResource(const char* name, vector<int> cst, int scheduling);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
-	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int type);
+	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam);
 	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads);
 	void addInitial(warp::CBehavior* bhvr);
 
@@ -97,9 +97,9 @@ warp::CFunctionBlock* WarpJNI::addFunctionBlock(const char* name, int cpu, int p
 	return fb;
 }
 
-warp::CBehavior* WarpJNI::addBehavior(warp::CFunctionBlock* fb, const char* name, int type) {
+warp::CBehavior* WarpJNI::addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam) {
 //    cout << "WarpJNI::addBehavior(" << fb->getName() << "::" << name << ", " << type << ")\n";
-	warp::CBehavior* bhvr = new warp::CBehavior(*fb, name, type, 0, false);
+	warp::CBehavior* bhvr = new warp::CBehavior(*fb, name, loopType, loopParam, false);
 	fb->addBehavior(bhvr);
 	return bhvr;
 }
@@ -311,12 +311,19 @@ JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_Warp_getNRemainingBehaviors(JN
 
 /* ******************** JNI API for FunctionBlock ******************** */
 
-JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpFunctionBlock_addBehavior(JNIEnv *env, jclass, jlong handle, jlong warpHandle, jstring name, jint type) {
+JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpFunctionBlock_addBehavior(
+	JNIEnv *env, jclass,
+	jlong handle,
+	jlong warpHandle,
+	jstring name,
+	jint loopType,
+	jint loopParam
+) {
 	warp::CFunctionBlock* fb = (warp::CFunctionBlock*)handle;
 	WarpJNI* warp = (WarpJNI*)warpHandle;
 
 	const char *str= env->GetStringUTFChars(name, 0);
-	warp::CBehavior* bhvr = warp->addBehavior(fb, str, type);
+	warp::CBehavior* bhvr = warp->addBehavior(fb, str, loopType, loopParam);
 
     env->ReleaseStringUTFChars(name, str);
     return (jlong)bhvr;
@@ -351,6 +358,17 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addSendTrigger(JN
 	warp::CBehavior* sender = (warp::CBehavior*)handle;
 	warp::CBehavior* receiver = (warp::CBehavior*)receiverHandle;
 	sender->addSendTrigger(receiver);
+}
+
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addRepeatUnless(
+	JNIEnv *,
+	jclass,
+	jlong handle,
+	jlong unlessStepHandle
+) {
+	warp::CBehavior* bhvr = (warp::CBehavior*)handle;
+	warp::CStep* unlessEvent = (warp::CStep*)unlessStepHandle;
+	bhvr->setUnlessCondition(unlessEvent);
 }
 
 

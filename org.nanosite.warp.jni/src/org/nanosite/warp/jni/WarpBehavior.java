@@ -24,8 +24,13 @@ public class WarpBehavior {
 		addSendTrigger(handle, receiver.handle);
 	}
 
+	public void addRepeatUnless(WarpStep terminationStep) {
+		addRepeatUnless(handle, terminationStep.getHandle());
+	}
+
 	static private native void setInitial(long handle, long simhandle);
 	static private native long addStep(long handle, long simhandle, String name, long[] loads);
 	static private native void addSendTrigger(long handle, long receiverHandle);
+	static private native void addRepeatUnless(long handle, long unlessStepHandle);
 
 }

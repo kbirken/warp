@@ -10,7 +10,7 @@ public class SingleCPULoadTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testSingleBehaviorOneStep() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addStep(bhvr1, "s1", 3000);
 		bhvr1.setInitial();
 	
@@ -22,7 +22,7 @@ public class SingleCPULoadTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testSingleBehaviorTwoSteps() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addStep(bhvr1, "s1", 2000);
 		WarpStep s2 = addStep(bhvr1, "s2", 3000);
 		bhvr1.setInitial();
@@ -36,12 +36,12 @@ public class SingleCPULoadTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testTwoBehaviorsSequential() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addStep(bhvr1, "s1", 1000);
 		WarpStep s2 = addStep(bhvr1, "s2", 2000);
 		bhvr1.setInitial();
 
-		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0);
+		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0, 0);
 		WarpStep s5 = addStep(bhvr2, "s5", 500);
 		WarpStep s6 = addStep(bhvr2, "s6", 600);
 	
@@ -59,12 +59,12 @@ public class SingleCPULoadTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testTwoBehaviorsParallel() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addStep(bhvr1, "s1", 1000);
 		WarpStep s2 = addStep(bhvr1, "s2", 2000);
 		bhvr1.setInitial();
 
-		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0);
+		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0, 0);
 		WarpStep s5 = addStep(bhvr2, "s5", 2000);
 		bhvr2.setInitial();
 		
@@ -78,12 +78,12 @@ public class SingleCPULoadTests extends WarpSingleCPUTestBase {
 	@Test
 	public void testTwoBehaviorsParallelPrecondition() {
 		WarpFunctionBlock fb1 = warp.addFunctionBlock("FB1", 1, 1);
-		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0);
+		WarpBehavior bhvr1 = fb1.addBehavior("Bhvr1", 0, 0);
 		WarpStep s1 = addStep(bhvr1, "s1", 1000);
 		WarpStep s2 = addStep(bhvr1, "s2", 2000);
 		bhvr1.setInitial();
 
-		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0);
+		WarpBehavior bhvr2 = fb1.addBehavior("Bhvr2", 0, 0);
 		WarpStep s5 = addStep(bhvr2, "s5", 2000);
 		bhvr2.setInitial();
 		

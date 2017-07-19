@@ -9,11 +9,17 @@ public class WarpFunctionBlock {
 		this.handle = handle;
 	}
 	
-	public WarpBehavior addBehavior(String name, int type) {
-		long bhvr = addBehavior(handle, api.getHandle(), name, type);
+	public WarpBehavior addBehavior(String name, int loopType, int loopParam) {
+		long bhvr = addBehavior(handle, api.getHandle(), name, loopType, loopParam);
 		return new WarpBehavior(api, bhvr);
 	}
 
-	static private native long addBehavior(long handle, long warpHandle, String name, int type);
+	static private native long addBehavior(
+		long handle,
+		long warpHandle,
+		String name,
+		int loopType,
+		int loopParam
+	);
 
 }
