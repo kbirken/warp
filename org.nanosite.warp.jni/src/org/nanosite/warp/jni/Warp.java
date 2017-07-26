@@ -80,8 +80,10 @@ public class Warp {
 	 * This has to be done explicitly because some clients want to do this differently
 	 * (i.e., without using this method).
 	 */
-	public static void initJNI() { 
-		System.loadLibrary("warp_jni");
+	public static void initJNI() {
+		//TODO: Need a cleaner solution for loading libaries. The full path works for Windows and the loadLibrary version works for MAC.
+		System.load("C:\\warp\\libwarp_jni.jnilib");
+		//System.loadLibrary("warp_jni");
 	}
 	
 	private StepDirectory steps = new StepDirectory();
