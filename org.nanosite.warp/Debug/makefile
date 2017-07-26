@@ -47,8 +47,8 @@ all: warp.exe
 # Tool invocations
 warp.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cygwin C++ Linker'
-	g++  -o "warp.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: MinGW C++ Linker'
+	g++ -static-libgcc -static-libstdc++ -o "warp.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

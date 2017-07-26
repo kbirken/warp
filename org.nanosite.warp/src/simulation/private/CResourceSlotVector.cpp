@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include <cstdint>
+#include <limits>
 
 #include "simulation/CResourceSlotVector.h"
 #include "simulation/CIntAccuracy.h"
@@ -10,7 +12,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-unsigned CResourceVector::_nResources = INT_MAX;
+unsigned CResourceVector::_nResources = std::numeric_limits<std::int32_t>::max();
 
 
 //////////////////////////////////////////////////////////////////////
