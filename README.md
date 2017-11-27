@@ -30,6 +30,19 @@ Just install Eclipse Juno CDT, import the project org.nanosite.warp
 and build it with gcc. Call the resulting executable to get information
 on command line options.
 
+
+Switching OS during the Build process
+--------------------------------------
+
+A few manual steps are required to ensure the build process works when shifting to Windows (or from MAC to windows).  
+  - The org.nanosite.warp project (C++) has a build target called WARP Jni Lib Windows. The environment of this build target must include the proper paths to a 64 bit Mingw and MSys. 
+  ![alt text](https://github.com/kbirken/warp/blob/master/Readme-Images/windows-doc1.PNG)
+  
+  - If not already set, the build path of the java project (org.nanosite.warp.jni) should include the windows-64 path as the path to the native library. The C++ project builds the jnilib file and as a post-processing step copies the jnilib file into the windows-64 folder. 
+  ![alt text](https://github.com/kbirken/warp/blob/master/Readme-Images/windows-doc2.PNG)
+  
+  
+There are a few steps needed to ensure building the jnilib file in 
 Open topics / next steps
 ------------------------
 
