@@ -36,6 +36,8 @@ def getJniPath() {
         throw new GradleException("unsupported operating system")
     }
 }
+def availableProcessors = Runtime.runtime.availableProcessors()
+
 
 List<String> jniClasses = ["org.nanosite.warp.jni.Warp", "org.nanosite.warp.jni.WarpFunctionBlock",
                   "org.nanosite.warp.jni.WarpBehavior", "org.nanosite.warp.jni.WarpStep"]
@@ -55,7 +57,43 @@ task generateJniHeaders(type:Exec) {
     dependsOn classes
 }
 
+task runCMake(type:Exec) {
+    doFirst{
+        mkdir(buildDir)
+    }
+    commandLine "cmake", ".."
+    workingDir buildDir
+}
+
+task makeWrapCpp(type:Exec) {
+    commandLine "make", "-j", availableProcessors, "all"
+    workingDir buildDir
+    dependsOn runCMake
+}
+
+task cleanWarpCpp(type:Exec) {
+    commandLine "make", "clean"
+    workingDir buildDir
+    dependsOn runCMake
+}
+
+def libFile() {
+    return "libwarp_lib.dylib"
+}
+
+
+task buildJni(type:Copy) {
+    from buildDir
+    include libFile()
+    rename libFile(), "libwarp_jni.jnilib"
+    into getJniPath()
+    dependsOn makeWrapCpp
+}
+
 tasks.withType(Test) {
     systemProperty "java.library.path", getJniPath()
 }
+
+clean.dependsOn cleanWarpCpp
+test.dependsOn buildJni
 
