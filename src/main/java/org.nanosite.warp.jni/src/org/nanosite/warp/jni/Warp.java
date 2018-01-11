@@ -3,6 +3,7 @@ package org.nanosite.warp.jni;
 import java.io.File;
 import java.util.Map;
 
+import org.nanosite.warp.jni.OSDetector;
 import org.nanosite.warp.jni.results.SimulationResult;
 
 public class Warp {
@@ -101,7 +102,10 @@ public class Warp {
 			System.load(getWin64LibraryPath() + File.separator + "libwarp_jni.jnilib");
 		} else if (OSDetector.isMac()) {
 			System.loadLibrary("warp_jni");
+		} else if (OSDetector.isUnix()) {
+			System.loadLibrary("warp_lib");
 		}
+
 	}
 
 	private static String getWin64LibraryPath() {
