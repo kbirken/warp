@@ -78,7 +78,15 @@ task cleanWarpCpp(type:Exec) {
 }
 
 def libFile() {
-    return "libwarp_lib.dylib"
+    if (OperatingSystem.current().isMacOsX()) {
+        return "libwarp_lib.dylib"
+    } else if (OperatingSystem.current().isLinux()) {
+        return "libwarp_lib.so"
+    } else if (OperatingSystem.current().isWindows()) {
+        return "libwarp_lib.dll"
+    } else {
+        throw new GradleException("unsupported operating system")
+    }
 }
 
 
