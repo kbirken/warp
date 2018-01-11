@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MINGW_HOME/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MINGW_HOME/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MINGW_HOME/value=C\:\\Program Files\\mingw-w64\\x86_64-5.4.0-win32-seh-rt_v5-rev0\\mingw64
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MSYS_HOME/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MSYS_HOME/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/MSYS_HOME/value=c\:\\msys64\\msys
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/PATH/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/PATH/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/PATH/value=${MINGW_HOME}\\bin;C\:/Program Files/Java/jre1.8.0_131/bin/server;C\:/Program Files/Java/jre1.8.0_131/bin;C\:/Program Files/Java/jre1.8.0_131/lib/amd64;C\:\\ProgramData\\Oracle\\Java\\javapath;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;C\:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C\:\\Program Files (x86)\\GNU\\GnuPG\\pub;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Program Files\\TortoiseGit\\bin;C\:\\Program Files\\Git\\cmd;C\:\\Program Files\\Java\\jdk1.8.0_112\\bin\\;C\:\\apache-ant-1.10.1/bin;C\:\\Program Files\\Java\\jdk1.8.0_112\\;C\:\\Program Files\\Git LFS;C\:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\;C\:\\apacheant\\apache-ant-1.9.9\\bin;C\:\\Program Files (x86)\\Skype\\Phone\\;C\:\\Program Files\\Intel\\WiFi\\bin\\;C\:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C\:\\Program Files (x86)\\Sublime Text 3\\;C\:\\Users\\knarasimhan\\AppData\\Local\\Microsoft\\WindowsApps;C\:\\Program Files\\Java\\jdk1.8.0_112\\bin\\;C\:\\Program Files\\Intel\\WiFi\\bin\\;C\:\\apache-maven-3.3.9\\bin;C\:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C\:\\WINDOWS\\system32
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/append=true
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.117966988.843752214.139653515/appendContributed=true
