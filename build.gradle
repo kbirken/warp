@@ -63,10 +63,11 @@ task runCMake(type:Exec) {
     }
     commandLine "cmake", ".."
     workingDir buildDir
+    dependsOn generateJniHeaders
 }
 
 task makeWrapCpp(type:Exec) {
-    commandLine "make", "-j", availableProcessors, "all"
+    commandLine "make", "-j", availableProcessors
     workingDir buildDir
     dependsOn runCMake
 }
@@ -91,9 +92,12 @@ def libFile() {
 
 
 task buildJni(type:Copy) {
+    doFirst {
+        mkdir(getJniPath())
+    }
     from buildDir
     include libFile()
-    rename libFile(), "libwarp_jni.jnilib"
+    rename libFile(), (OperatingSystem.current().isLinux() ? "libwarp_lib.so" : "libwarp_jni.jnilib")
     into getJniPath()
     dependsOn makeWrapCpp
 }
