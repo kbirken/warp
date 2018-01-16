@@ -18,6 +18,7 @@ repositories {
     jcenter()
 }
 
+//Dependencies section
 dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
@@ -63,8 +64,6 @@ task runCMake(type:Exec) {
     }
     commandLine "cmake", ".."
     if (OperatingSystem.current().isWindows()) {
-        //Ugly hack to remove sh.exe from path as MingW makefile generator does not like sh
-        commandLine "set", "PATH=%PATH:C:/cygwin64/bin/;=%"
         commandLine "cmake", "-G", "MinGW Makefiles", ".."
     }
     workingDir buildDir
@@ -73,12 +72,18 @@ task runCMake(type:Exec) {
 
 task makeWrapCpp(type:Exec) {
     commandLine "make", "-j", availableProcessors
+    if (OperatingSystem.current().isWindows()) {
+        commandLine "mingw32-make", "-j", availableProcessors
+    }
     workingDir buildDir
     dependsOn runCMake
 }
 
 task cleanWarpCpp(type:Exec) {
     commandLine "make", "clean"
+    if (OperatingSystem.current().isWindows()) {
+        commandLine "mingw32-make", "clean"
+    }
     workingDir buildDir
     dependsOn runCMake
 }
