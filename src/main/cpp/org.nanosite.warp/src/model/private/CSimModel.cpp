@@ -111,8 +111,7 @@ bool CSimModel::readFile (const char* modelFilename, bool verbose)
 		in >> poolName >> maxAmount;
 		//printf("Pool %s has maximum amount of %d\n", poolName.c_str(), maxAmount);
 		Pool *pool = new Pool(poolName.c_str(), maxAmount);
-		sim::PoolSim *poolSim = new sim::PoolSim(*pool);
-		_pools.push_back(poolSim);
+		addPool(pool);
 	}
 
 
@@ -458,6 +457,12 @@ void CSimModel::addResource(shared_ptr<Resource> res) {
 	for(int j=0; j<n; j++) {
 		_slots.push_back(res);
 	}
+}
+
+void CSimModel::addPool(const Pool* pool) {
+	// add to resources list
+	sim::PoolSim *poolSim = new sim::PoolSim(*pool);
+	_pools.push_back(poolSim);
 }
 
 void CSimModel::phase2() {

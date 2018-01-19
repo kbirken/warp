@@ -1,7 +1,6 @@
 package org.nanosite.warp.jni;
 
 import java.io.File;
-import java.util.Map;
 
 import org.nanosite.warp.jni.OSDetector;
 import org.nanosite.warp.jni.results.SimulationResult;
@@ -39,6 +38,18 @@ public class Warp {
 	 *            interfaces
 	 */
 	private native void addResource(long simhandle, String name, int[] cst);
+
+	/**
+	 * Add a allocate/free resource to the simulation model.
+	 * 
+	 * @param simhandle
+	 *            the native object handle
+	 * @param name
+	 *            the name of the pool resource
+	 * @param maxAmount
+	 *            the maximum amount of allocatable items
+	 */
+	private native void addPool(long simhandle, String name, int maxAmount);
 
 	/**
 	 * Add a function block to the simulation model.

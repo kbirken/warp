@@ -16,6 +16,7 @@
 #include "model/Resource.h"
 #include "model/CFunctionBlock.h"
 #include "model/CBehavior.h"
+#include "model/Pool.h"
 #include "sim/PoolSim.h"
 #include "simulation/CSimCore.h"
 #include "simulation/CIntAccuracy.h"
@@ -35,6 +36,7 @@ public:
 	virtual ~WarpJNI();
 
 	void addResource(const char* name, vector<int> cst, int scheduling);
+	void addPool(const char* name, int maxAmount);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
 	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam);
 	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads);
@@ -81,6 +83,12 @@ void WarpJNI::addResource(const char* name, vector<int> cst, int scheduling) {
 //    cout << "WarpJNI::addResource(" << name << ")\n";
     shared_ptr<Resource> res(new Resource(name, cst, (Resource::Scheduling)scheduling));
     _model.addResource(res);
+}
+
+void WarpJNI::addPool(const char* name, int maxAmount) {
+//    cout << "WarpJNI::addPool(Pool << name << ")\n";
+    Pool* pool = new Pool(name, maxAmount);
+    _model.addPool(pool);
 }
 
 warp::CFunctionBlock* WarpJNI::addFunctionBlock(const char* name, int cpu, int partition) {
@@ -264,6 +272,15 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addResource(JNIEnv *env, 
 	for(int i=0; i<n; i++)
 		cstData.push_back(cstArray[i]);
 	warp->addResource(str, cstData, 0);
+
+    env->ReleaseStringUTFChars(name, str);
+}
+
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addPool(JNIEnv *env, jobject obj, jlong handle, jstring name, jint maxAmount) {
+	WarpJNI* warp = (WarpJNI*)handle;
+
+	const char *str= env->GetStringUTFChars(name, 0);
+	warp->addPool(str, maxAmount);
 
     env->ReleaseStringUTFChars(name, str);
 }

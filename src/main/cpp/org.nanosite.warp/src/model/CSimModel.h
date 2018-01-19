@@ -13,6 +13,7 @@
 #include "model/CFunctionBlock.h"
 #include "model/CStep.h"
 #include "model/Resource.h"
+#include "model/Pool.h"
 #include "sim/PoolSimVector.h"
 
 namespace warp {
@@ -27,6 +28,7 @@ public:
 
 	void init();
 	void addResource(shared_ptr<Resource> res);
+	void addPool(const Pool* pool);
 	void phase2();
 	void addFunctionBlock(CFunctionBlock* fb);
 	void addInitial(CBehavior* bhvr);
