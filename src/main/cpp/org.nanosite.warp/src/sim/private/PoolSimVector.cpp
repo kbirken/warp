@@ -31,6 +31,11 @@ void PoolSimVector::push_back (PoolSim* elem)
 }
 
 
+int PoolSimVector::getNPools (void)
+{
+	return _pools.size();
+}
+
 void PoolSimVector::init (void)
 {
 	for(int i=0; i<_pools.size(); i++) {

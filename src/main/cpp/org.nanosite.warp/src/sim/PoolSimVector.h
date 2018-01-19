@@ -31,6 +31,9 @@ namespace sim {
 		// add new pool
 		void push_back (PoolSim* elem);
 
+		// get number of pools
+		int getNPools();
+
 		// init for simulation run
 		void init (void);
 

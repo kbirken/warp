@@ -27,11 +27,12 @@ public class SingleResourceTestBase extends WarpTestBase {
 	
 	protected WarpStep addWaitStep(WarpBehavior bhvr, String name, int waitTime, int loadCPU1, int loadRes1IF1, int loadRes1IF2) {
 		long[] loads = new long[4];
+		long[] poolVals = new long[1];
 		loads[0] = ((long)waitTime) * MS;
 		loads[1] = ((long)loadCPU1) * MS;
 		loads[2] = ((long)loadRes1IF1) * MS;
 		loads[3] = ((long)loadRes1IF2) * MS;
-		return bhvr.addStep(name, loads);
+		return bhvr.addStep(name, loads, poolVals);
 	}
 
 }

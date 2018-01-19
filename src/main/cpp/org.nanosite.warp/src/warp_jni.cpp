@@ -39,7 +39,7 @@ public:
 	void addPool(const char* name, int maxAmount);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
 	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam);
-	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads);
+	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads, vector<long> poolVals);
 	void addInitial(warp::CBehavior* bhvr);
 
 	void simulate(const char* dotfile);
@@ -112,7 +112,7 @@ warp::CBehavior* WarpJNI::addBehavior(warp::CFunctionBlock* fb, const char* name
 	return bhvr;
 }
 
-warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads) {
+warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads, vector<long> poolVals) {
 //    cout << "WarpJNI::addStep(" << bhvr->getQualifiedName() << ", " << name << ")\n";
 
 	// create CStep and corresponding CResourceVector
@@ -159,13 +159,24 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<lo
 		*/
 		averageCSTs.push_back(averageCST);
 	}
-	warp::sim::PoolSimVector::Values poolVals; // TODO
+
+	warp::sim::PoolSimVector::Values poolValsVector;
+	int np = _model.getPools().getNPools();
+	if (np > poolVals.size()) {
+		cerr << "Not enough pool values for " << np << " pools!";
+	} else {
+		for(int i=0; i<np; i++) {
+			// TODO: here we implicitly convert long values to int
+			poolValsVector.push_back(poolVals[i]);
+		}
+	}
+
 	const warp::CFunctionBlock& fb = bhvr->getFunctionBlock();
 	warp::CStep* step =
 			new warp::CStep(_stepId++, *bhvr, name, 0, fb.getCPU(), fb.getPartition(),
 					new CResourceVector(values),
 					new CResourceVector(averageCSTs),
-					poolVals
+					poolValsVector
 			);
 	if (_verbose>1) {
 		step->print();
@@ -355,17 +366,31 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_WarpBehavior_setInitial(JNIEnv
 	warp->addInitial(bhvr);
 }
 
-JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addStep(JNIEnv *env, jclass, jlong handle, jlong warpHandle, jstring name, jlongArray loads) {
+JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpBehavior_addStep(
+		JNIEnv *env, jclass, jlong handle,
+		jlong warpHandle,
+		jstring name,
+		jlongArray loads,
+		jlongArray poolVals
+) {
 	warp::CBehavior* bhvr = (warp::CBehavior*)handle;
 	WarpJNI* warp = (WarpJNI*)warpHandle;
 
 	const char *str= env->GetStringUTFChars(name, 0);
+
 	int n = env->GetArrayLength(loads);
 	jlong* loadsArray = env->GetLongArrayElements(loads, 0);
 	vector<long> loadsData;
 	for(int i=0; i<n; i++)
 		loadsData.push_back(loadsArray[i]);
-	warp::CStep* step = warp->addStep(bhvr, str, loadsData);
+
+	int np = env->GetArrayLength(poolVals);
+	jlong* poolValsArray = env->GetLongArrayElements(poolVals, 0);
+	vector<long> poolValsData;
+	for(int i=0; i<np; i++)
+		poolValsData.push_back(poolValsArray[i]);
+
+	warp::CStep* step = warp->addStep(bhvr, str, loadsData, poolValsData);
 
     env->ReleaseStringUTFChars(name, str);
     return (jlong)step;
