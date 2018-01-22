@@ -340,7 +340,7 @@ bool CSimulatorCore::iteration (
 			_runningMap[step] = _time;
 
 			// alloc/free pool resources of this step
-			bool ok = pools.apply(step->getPoolRequests(), *this);
+			bool ok = pools.apply(step->getPoolRequests(), step, *this);
 			if (!ok) {
 				return false;
 			}

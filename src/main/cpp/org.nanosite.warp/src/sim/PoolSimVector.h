@@ -16,6 +16,10 @@ class CPool;
 class ILogger;
 
 namespace warp {
+
+// forward declarations
+class CStep;
+
 namespace sim {
 
 	// forward declarations
@@ -38,7 +42,7 @@ namespace sim {
 		void init (void);
 
 		// allocate/free
-		bool apply (PoolSimVector::Values requests, ILogger& logger);
+		bool apply (PoolSimVector::Values requests, CStep* step, ILogger& logger);
 
 	private:
 		typedef vector<PoolSim*> Elements;

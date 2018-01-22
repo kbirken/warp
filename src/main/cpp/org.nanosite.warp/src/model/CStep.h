@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 using namespace std;
 
 
@@ -98,6 +99,12 @@ namespace warp {
 		void print() const;
 		void printWaitingList() const;
 
+		void storePoolState(int index, int amount, bool overflow, bool underflow);
+		bool usedPool(int index);
+		int getPoolUsage(int index);
+		bool getPoolOverflow(int index);
+		bool getPoolUnderflow(int index);
+
 	private:
 		int _id;
 		/*const*/ CBehavior& _bhvr;
@@ -120,6 +127,25 @@ namespace warp {
 		// this data is changed when the step is executed
 		CResourceVector* _resourceNeeds;
 		Vector _waitFor;
+
+		// state of a pool after execution of this step
+		struct PoolState {
+			int _amount;
+			bool _overflow;
+			bool _underflow;
+
+			PoolState() : _amount(0), _overflow(false), _underflow(false) { }
+			PoolState(int amount, bool overflow, bool underflow) :
+				_amount(amount),
+				_overflow(overflow),
+				_underflow(underflow)
+			{ }
+		};
+
+		// we only store the last state for each pool
+		// the map key is the global pool's index
+		typedef map<int, PoolState> PoolStates;
+		PoolStates _poolStates;
 	};
 
 } /* namespace warp */

@@ -10,6 +10,8 @@
 #include "sim/PoolSim.h"
 #include "simulation/ILogger.h"
 
+#include "model/CStep.h"
+
 namespace warp {
 namespace sim {
 
@@ -44,7 +46,7 @@ void PoolSimVector::init (void)
 }
 
 
-bool PoolSimVector::apply (PoolSimVector::Values requests, ILogger& logger)
+bool PoolSimVector::apply (PoolSimVector::Values requests, warp::CStep* step, ILogger& logger)
 {
 	if (requests.size() != _pools.size()) {
 		// both vectors need to have same size
@@ -58,7 +60,15 @@ bool PoolSimVector::apply (PoolSimVector::Values requests, ILogger& logger)
 	for(int i=0; i<_pools.size(); i++) {
 		int r = requests[i];
 		if (r != 0) {
-			_pools[i]->handleRequest(r, i, logger);
+			PoolSim* p = _pools[i];
+			p->handleRequest(r, i, logger);
+
+			// store current state of this pool in step, for result retrieval
+			step->storePoolState(i,
+					p->getAllocated(),
+					p->getNOverflows() > 0,
+					p->getNUnderflows() > 0
+			);
 		}
 	}
 

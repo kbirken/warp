@@ -156,6 +156,42 @@ void CStep::printWaitingList() const
 }
 
 
+void CStep::storePoolState(int index, int amount, bool overflow, bool underflow) {
+	_poolStates[index] = PoolState(amount, overflow, underflow);
+}
+
+bool CStep::usedPool(int index) {
+	return _poolStates.find(index) != _poolStates.cend();
+}
+
+int CStep::getPoolUsage(int index) {
+	PoolStates::const_iterator i = _poolStates.find(index);
+	if (i == _poolStates.cend()) {
+		return 0;
+	} else {
+		return i->second._amount;
+	}
+}
+
+bool CStep::getPoolOverflow(int index) {
+	PoolStates::const_iterator i = _poolStates.find(index);
+	if (i == _poolStates.cend()) {
+		return false;
+	} else {
+		return i->second._overflow;
+	}
+}
+
+bool CStep::getPoolUnderflow(int index) {
+	PoolStates::const_iterator i = _poolStates.find(index);
+	if (i == _poolStates.cend()) {
+		return false;
+	} else {
+		return i->second._underflow;
+	}
+}
+
+
 string CStep::getQualifiedName() const
 {
 	return _bhvr.getQualifiedName() + "::" + _name;

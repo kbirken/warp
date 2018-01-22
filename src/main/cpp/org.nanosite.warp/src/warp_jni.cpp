@@ -466,3 +466,19 @@ JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpStep_getDone(JNIEnv *, jc
 	}
 }
 
+JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_WarpStep_getPoolUsage(JNIEnv *, jclass, jlong handle, jint poolIndex) {
+	warp::CStep* step = (warp::CStep*)handle;
+	return step->getPoolUsage(poolIndex);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_nanosite_warp_jni_WarpStep_getPoolOverflow(JNIEnv *, jclass, jlong handle, jint poolIndex) {
+	warp::CStep* step = (warp::CStep*)handle;
+	return step->getPoolOverflow(poolIndex);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_nanosite_warp_jni_WarpStep_getPoolUnderflow(JNIEnv *, jclass, jlong handle, jint poolIndex) {
+	warp::CStep* step = (warp::CStep*)handle;
+	return step->getPoolUnderflow(poolIndex);
+}
+
+

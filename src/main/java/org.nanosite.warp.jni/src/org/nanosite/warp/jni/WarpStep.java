@@ -36,6 +36,18 @@ public class WarpStep {
 	public long getDone() {
 		return getDone(handle, api.getHandle());
 	}
+	
+	public int getPoolUsage(int poolIndex) {
+		return getPoolUsage(handle, poolIndex);
+	}
+
+	public boolean getPoolOverflow(int poolIndex) {
+		return getPoolOverflow(handle, poolIndex);
+	}
+
+	public boolean getPoolUnderflow(int poolIndex) {
+		return getPoolUnderflow(handle, poolIndex);
+	}
 
 	/**
 	 * Get internal handle for this step.</p>
@@ -50,5 +62,8 @@ public class WarpStep {
 	static private native long getReady(long handle, long simhandle);
 	static private native long getRunning(long handle, long simhandle);
 	static private native long getDone(long handle, long simhandle);
+	static private native int getPoolUsage(long handle, int poolIndex);
+	static private native boolean getPoolOverflow(long handle, int poolIndex);
+	static private native boolean getPoolUnderflow(long handle, int poolIndex);
 
 }

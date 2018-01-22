@@ -30,6 +30,8 @@ namespace sim {
 		const char* getName() const;
 
 		int getAllocated() const  { return _allocated; }
+		int getNOverflows() const  { return _nOverflows; }
+		int getNUnderflows() const  { return _nUnderflows; }
 
 		// init for simulation run
 		void init (void);

@@ -43,4 +43,15 @@ abstract public class WarpTestBase {
 		assertEquals(tRunningExpected, step.getRunning()/MS);
 		assertEquals(tDoneExpected, step.getDone()/MS);
 	}
+
+	protected void checkPool(WarpStep step,
+		int poolIndex,
+		int allocatedExpected,
+		boolean overflowExpected,
+		boolean underflowExpected
+	) {
+		assertEquals(allocatedExpected, step.getPoolUsage(poolIndex));
+		assertEquals(overflowExpected, step.getPoolOverflow(poolIndex));
+		assertEquals(underflowExpected, step.getPoolUnderflow(poolIndex));
+	}
 }
