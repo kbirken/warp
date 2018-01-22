@@ -17,9 +17,9 @@ namespace model {
 	class Pool {
 	public:
 		enum ErrorAction {
-			EXECUTE_AND_CONTINUE,
-			REJECT_AND_CONTINUE,
-			STOP_WORKING
+			REJECT_AND_CONTINUE = 0,
+			EXECUTE_AND_CONTINUE = 1,
+			STOP_WORKING = 2
 		};
 
 		Pool(const char* name, int maxAmount);

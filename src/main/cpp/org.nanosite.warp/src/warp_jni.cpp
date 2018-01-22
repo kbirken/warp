@@ -36,7 +36,7 @@ public:
 	virtual ~WarpJNI();
 
 	void addResource(const char* name, vector<int> cst, int scheduling);
-	void addPool(const char* name, int maxAmount);
+	void addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
 	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam);
 	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads, vector<long> poolVals);
@@ -85,9 +85,11 @@ void WarpJNI::addResource(const char* name, vector<int> cst, int scheduling) {
     _model.addResource(res);
 }
 
-void WarpJNI::addPool(const char* name, int maxAmount) {
+void WarpJNI::addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow) {
 //    cout << "WarpJNI::addPool(Pool << name << ")\n";
-    Pool* pool = new Pool(name, maxAmount);
+    Pool* pool = new Pool(name, maxAmount,
+    		static_cast<Pool::ErrorAction>(onOverflow),
+			static_cast<Pool::ErrorAction>(onUnderflow));
     _model.addPool(pool);
 }
 
@@ -287,11 +289,17 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addResource(JNIEnv *env, 
     env->ReleaseStringUTFChars(name, str);
 }
 
-JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addPool(JNIEnv *env, jobject obj, jlong handle, jstring name, jint maxAmount) {
+JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addPool(
+	JNIEnv *env, jobject obj, jlong handle,
+	jstring name,
+	jint maxAmount,
+	jint onOverflow,
+	jint onUnderflow
+) {
 	WarpJNI* warp = (WarpJNI*)handle;
 
 	const char *str= env->GetStringUTFChars(name, 0);
-	warp->addPool(str, maxAmount);
+	warp->addPool(str, maxAmount, onOverflow, onUnderflow);
 
     env->ReleaseStringUTFChars(name, str);
 }

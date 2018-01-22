@@ -52,12 +52,12 @@ void PoolSim::handleRequest(int amount, int index, ILogger& logger) {
 		}
 		else {
 			// overflow or underflow
-			if (amount>0) {
-				handleOverflow(amount);
-				logger.log("POOL", "pool %s/%d: overflow %d, now %d\n", getName(), index, amount, getAllocated());
-			} else {
+			if (getAllocated()+amount < 0) {
 				handleUnderflow(amount);
 				logger.log("POOL", "pool %s/%d: underflow %d, now %d\n", getName(), index, amount, getAllocated());
+			} else {
+				handleOverflow(amount);
+				logger.log("POOL", "pool %s/%d: overflow %d, now %d\n", getName(), index, amount, getAllocated());
 			}
 		}
 	}

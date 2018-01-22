@@ -48,8 +48,12 @@ public class Warp {
 	 *            the name of the pool resource
 	 * @param maxAmount
 	 *            the maximum amount of allocatable items
+	 * @param onOverflow
+	 *            the pool's behavior if overflow occurs
+	 * @param onUnderflow
+	 *            the pool's behavior if underflow occurs
 	 */
-	private native void addPool(long simhandle, String name, int maxAmount);
+	private native void addPool(long simhandle, String name, int maxAmount, int onOverflow, int onUnderflow);
 
 	/**
 	 * Add a function block to the simulation model.
@@ -154,8 +158,8 @@ public class Warp {
 		addResource(simhandle, name, cst);
 	}
 
-	public void addPool(String name, int maxAmount) {
-		addPool(simhandle, name, maxAmount);
+	public void addPool(String name, int maxAmount, int onOverflow, int onUnderflow) {
+		addPool(simhandle, name, maxAmount, onOverflow, onUnderflow);
 	}
 
 	public WarpFunctionBlock addFunctionBlock(String name, int cpu, int partition) {

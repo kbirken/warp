@@ -11,7 +11,7 @@ public class SinglePoolTestBase extends WarpSingleCPUTestBase {
 		warp.addCPU("CPU1", 0);
 		
 		// and an alloc/free pool
-		warp.addPool("Pool1", 1000);
+		warp.addPool("Pool1", 1000, 0, 0);
 	}
 
 }
