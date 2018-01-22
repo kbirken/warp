@@ -58,20 +58,7 @@ bool PoolSimVector::apply (PoolSimVector::Values requests, ILogger& logger)
 	for(int i=0; i<_pools.size(); i++) {
 		int r = requests[i];
 		if (r != 0) {
-			if (_pools[i]->mayAlloc(requests[i])) {
-				// allocation in range, do it
-				_pools[i]->alloc(requests[i]);
-				logger.log("POOL", "pool %s/%d: request %d, now %d\n", _pools[i]->getName(), i, r, _pools[i]->getAllocated());
-			}
-			else {
-				// overflow or underflow
-				if (r>0) {
-					logger.log("POOL", "pool %s/%d: overflow %d\n", _pools[i]->getName(), i, r);
-				} else {
-					logger.log("POOL", "pool %s/%d: underflow %d\n", _pools[i]->getName(), i, r);
-				}
-			}
-
+			_pools[i]->handleRequest(r, i, logger);
 		}
 	}
 

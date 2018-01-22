@@ -8,6 +8,8 @@
 #ifndef WARP_SIM_POOL_H_
 #define WARP_SIM_POOL_H_
 
+#include "simulation/ILogger.h"
+
 #include <string>
 using namespace std;
 
@@ -32,13 +34,22 @@ namespace sim {
 		// init for simulation run
 		void init (void);
 
+		void handleRequest(int amount, int index, ILogger& logger);
+
+	private:
+		bool isStopped() const;
 		bool mayAlloc (int amount) const;
+		void handleOverflow (int amount);
+		void handleUnderflow (int amount);
 		void alloc (int amount);
 
 	private:
 		const model::Pool& _modelItem;
 
 		int _allocated;
+
+		int _nOverflows;
+		int _nUnderflows;
 	};
 
 } /* namespace sim */
