@@ -163,7 +163,7 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<lo
 	warp::sim::PoolSimVector::Values poolValsVector;
 	int np = _model.getPools().getNPools();
 	if (np > poolVals.size()) {
-		cerr << "Not enough pool values for " << np << " pools!";
+		cerr << "Not enough pool values for " << np << " pools in step " << name << "!";
 	} else {
 		for(int i=0; i<np; i++) {
 			// TODO: here we implicitly convert long values to int
