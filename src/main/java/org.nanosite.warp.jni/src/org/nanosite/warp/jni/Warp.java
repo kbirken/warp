@@ -154,6 +154,10 @@ public class Warp {
 		addResource(simhandle, name, cst);
 	}
 
+	public void addPool(String name, int maxAmount) {
+		addPool(simhandle, name, maxAmount);
+	}
+
 	public WarpFunctionBlock addFunctionBlock(String name, int cpu, int partition) {
 		long handle = addFunctionBlock(simhandle, name, cpu, partition);
 		return new WarpFunctionBlock(this, handle);

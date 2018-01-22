@@ -25,4 +25,12 @@ public class WarpSingleCPUTestBase extends WarpTestBase {
 		return bhvr.addStep(name, loads, poolVals);
 	}
 
+	protected WarpStep addPoolStep(WarpBehavior bhvr, String name, int poolVal) {
+		long[] loads = new long[2];
+		long[] poolVals = new long[1];
+		poolVals[0] = poolVal;
+		loads[0] = 0 * MS;
+		loads[1] = 10 * MS;
+		return bhvr.addStep(name, loads, poolVals);
+	}
 }
