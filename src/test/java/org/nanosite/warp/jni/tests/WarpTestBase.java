@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.nanosite.warp.jni.Warp;
+import org.nanosite.warp.jni.WarpPool;
 import org.nanosite.warp.jni.WarpBehavior;
 import org.nanosite.warp.jni.WarpStep;
 
@@ -44,7 +45,18 @@ abstract public class WarpTestBase {
 		assertEquals(tDoneExpected, step.getDone()/MS);
 	}
 
-	protected void checkPool(WarpStep step,
+	protected void checkPool(
+		WarpPool pool,
+		int allocatedExpected,
+		int nOverflowsExpected,
+		int nUnterflowsExpected
+	) {
+		assertEquals(allocatedExpected, pool.getAllocated());
+		assertEquals(nOverflowsExpected, pool.getNOverflows());
+		assertEquals(nUnterflowsExpected, pool.getNUnderflows());
+	}
+
+	protected void checkStepPool(WarpStep step,
 		int poolIndex,
 		int allocatedExpected,
 		boolean overflowExpected,

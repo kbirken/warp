@@ -22,6 +22,7 @@
 #include "simulation/CIntAccuracy.h"
 
 #include "org_nanosite_warp_jni_Warp.h"
+#include "org_nanosite_warp_jni_WarpPool.h"
 #include "org_nanosite_warp_jni_WarpFunctionBlock.h"
 #include "org_nanosite_warp_jni_WarpBehavior.h"
 #include "org_nanosite_warp_jni_WarpStep.h"
