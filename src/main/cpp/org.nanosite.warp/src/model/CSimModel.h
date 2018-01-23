@@ -28,7 +28,7 @@ public:
 
 	void init();
 	void addResource(shared_ptr<Resource> res);
-	void addPool(const Pool* pool);
+	sim::PoolSim* addPool(const Pool* pool);
 	void phase2();
 	void addFunctionBlock(CFunctionBlock* fb);
 	void addInitial(CBehavior* bhvr);

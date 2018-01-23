@@ -459,10 +459,11 @@ void CSimModel::addResource(shared_ptr<Resource> res) {
 	}
 }
 
-void CSimModel::addPool(const Pool* pool) {
+sim::PoolSim* CSimModel::addPool(const Pool* pool) {
 	// add to resources list
 	sim::PoolSim *poolSim = new sim::PoolSim(*pool);
 	_pools.push_back(poolSim);
+	return poolSim;
 }
 
 void CSimModel::phase2() {

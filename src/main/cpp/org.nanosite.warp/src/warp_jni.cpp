@@ -29,6 +29,7 @@
 
 using namespace std;
 using namespace warp::model;
+using namespace warp::sim;
 
 class WarpJNI {
 public:
@@ -36,7 +37,7 @@ public:
 	virtual ~WarpJNI();
 
 	void addResource(const char* name, vector<int> cst, int scheduling);
-	void addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow);
+	PoolSim* addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow);
 	warp::CFunctionBlock* addFunctionBlock(const char* name, int cpu, int partition);
 	warp::CBehavior* addBehavior(warp::CFunctionBlock* fb, const char* name, int loopType, int loopParam);
 	warp::CStep* addStep(warp::CBehavior* bhvr, const char* name, vector<long> loads, vector<long> poolVals);
@@ -85,12 +86,12 @@ void WarpJNI::addResource(const char* name, vector<int> cst, int scheduling) {
     _model.addResource(res);
 }
 
-void WarpJNI::addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow) {
+PoolSim* WarpJNI::addPool(const char* name, int maxAmount, int onOverflow, int onUnderflow) {
 //    cout << "WarpJNI::addPool(Pool << name << ")\n";
     Pool* pool = new Pool(name, maxAmount,
     		static_cast<Pool::ErrorAction>(onOverflow),
 			static_cast<Pool::ErrorAction>(onUnderflow));
-    _model.addPool(pool);
+    return _model.addPool(pool);
 }
 
 warp::CFunctionBlock* WarpJNI::addFunctionBlock(const char* name, int cpu, int partition) {
@@ -162,7 +163,7 @@ warp::CStep* WarpJNI::addStep(warp::CBehavior* bhvr, const char* name, vector<lo
 		averageCSTs.push_back(averageCST);
 	}
 
-	warp::sim::PoolSimVector::Values poolValsVector;
+	PoolSimVector::Values poolValsVector;
 	int np = _model.getPools().getNPools();
 	if (np > poolVals.size()) {
 		cerr << "Not enough pool values for " << np << " pools in step " << name << "!";
@@ -289,7 +290,7 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addResource(JNIEnv *env, 
     env->ReleaseStringUTFChars(name, str);
 }
 
-JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addPool(
+JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_Warp_addPool(
 	JNIEnv *env, jobject obj, jlong handle,
 	jstring name,
 	jint maxAmount,
@@ -299,9 +300,10 @@ JNIEXPORT void JNICALL Java_org_nanosite_warp_jni_Warp_addPool(
 	WarpJNI* warp = (WarpJNI*)handle;
 
 	const char *str= env->GetStringUTFChars(name, 0);
-	warp->addPool(str, maxAmount, onOverflow, onUnderflow);
+	PoolSim* pool = warp->addPool(str, maxAmount, onOverflow, onUnderflow);
 
     env->ReleaseStringUTFChars(name, str);
+    return (jlong)pool;
 }
 
 
@@ -342,6 +344,24 @@ JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_Warp_getNIterations(JNIEnv *, 
 JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_Warp_getNRemainingBehaviors(JNIEnv *, jobject, jlong handle) {
 	WarpJNI* warp = (WarpJNI*)handle;
 	return warp->getNRemnants();
+}
+
+
+/* ******************** JNI API for PoolSim ******************** */
+
+JNIEXPORT jlong JNICALL Java_org_nanosite_warp_jni_WarpPool_getAllocated(JNIEnv *env, jclass, jlong handle) {
+	PoolSim* pool = (PoolSim*)handle;
+	return (jlong)pool->getAllocated();
+}
+
+JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_WarpPool_getNOverflows(JNIEnv *env, jclass, jlong handle) {
+	PoolSim* pool = (PoolSim*)handle;
+	return (jint)pool->getNOverflows();
+}
+
+JNIEXPORT jint JNICALL Java_org_nanosite_warp_jni_WarpPool_getNUnderflows(JNIEnv *env, jclass, jlong handle) {
+	PoolSim* pool = (PoolSim*)handle;
+	return (jint)pool->getNUnderflows();
 }
 
 

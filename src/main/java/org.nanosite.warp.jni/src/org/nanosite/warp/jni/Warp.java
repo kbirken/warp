@@ -52,8 +52,9 @@ public class Warp {
 	 *            the pool's behavior if overflow occurs
 	 * @param onUnderflow
 	 *            the pool's behavior if underflow occurs
+	 * @return a handle for the native pool resource object
 	 */
-	private native void addPool(long simhandle, String name, int maxAmount, int onOverflow, int onUnderflow);
+	private native long addPool(long simhandle, String name, int maxAmount, int onOverflow, int onUnderflow);
 
 	/**
 	 * Add a function block to the simulation model.
@@ -158,8 +159,9 @@ public class Warp {
 		addResource(simhandle, name, cst);
 	}
 
-	public void addPool(String name, int maxAmount, int onOverflow, int onUnderflow) {
-		addPool(simhandle, name, maxAmount, onOverflow, onUnderflow);
+	public WarpPool addPool(String name, int maxAmount, int onOverflow, int onUnderflow) {
+		long handle = addPool(simhandle, name, maxAmount, onOverflow, onUnderflow);
+		return new WarpPool(this, handle);
 	}
 
 	public WarpFunctionBlock addFunctionBlock(String name, int cpu, int partition) {
