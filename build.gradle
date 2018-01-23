@@ -41,7 +41,7 @@ def availableProcessors = Runtime.runtime.availableProcessors()
 
 
 List<String> jniClasses = ["org.nanosite.warp.jni.Warp", "org.nanosite.warp.jni.WarpFunctionBlock",
-                  "org.nanosite.warp.jni.WarpBehavior", "org.nanosite.warp.jni.WarpStep"]
+                  "org.nanosite.warp.jni.WarpBehavior", "org.nanosite.warp.jni.WarpStep", "org.nanosite.warp.jni.WarpPool"]
 
 
 task generateJniHeaders(type:Exec) {
